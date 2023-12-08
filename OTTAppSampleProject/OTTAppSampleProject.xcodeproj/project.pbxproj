@@ -13,7 +13,18 @@
 		78EA42892B22A3D400E66AD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78EA42872B22A3D400E66AD9 /* Main.storyboard */; };
 		78EA428B2B22A3D500E66AD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78EA428A2B22A3D500E66AD9 /* Assets.xcassets */; };
 		78EA428E2B22A3D500E66AD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78EA428C2B22A3D500E66AD9 /* LaunchScreen.storyboard */; };
+		78EA429C2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EA429B2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		78EA429D2B22A40E00E66AD9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78EA42762B22A3D400E66AD9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78EA427D2B22A3D400E66AD9;
+			remoteInfo = OTTAppSampleProject;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		78EA427E2B22A3D400E66AD9 /* OTTAppSampleProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTTAppSampleProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -24,10 +35,19 @@
 		78EA428A2B22A3D500E66AD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		78EA428D2B22A3D500E66AD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		78EA428F2B22A3D500E66AD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78EA42992B22A40E00E66AD9 /* OTTAppSampleProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTTAppSampleProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		78EA429B2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTTAppSampleProjectTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		78EA427B2B22A3D400E66AD9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EA42962B22A40E00E66AD9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -41,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				78EA42802B22A3D400E66AD9 /* OTTAppSampleProject */,
+				78EA429A2B22A40E00E66AD9 /* OTTAppSampleProjectTests */,
 				78EA427F2B22A3D400E66AD9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				78EA427E2B22A3D400E66AD9 /* OTTAppSampleProject.app */,
+				78EA42992B22A40E00E66AD9 /* OTTAppSampleProjectTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,6 +87,14 @@
 				78EA428F2B22A3D500E66AD9 /* Info.plist */,
 			);
 			path = OTTAppSampleProject;
+			sourceTree = "<group>";
+		};
+		78EA429A2B22A40E00E66AD9 /* OTTAppSampleProjectTests */ = {
+			isa = PBXGroup;
+			children = (
+				78EA429B2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift */,
+			);
+			path = OTTAppSampleProjectTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -87,6 +117,24 @@
 			productReference = 78EA427E2B22A3D400E66AD9 /* OTTAppSampleProject.app */;
 			productType = "com.apple.product-type.application";
 		};
+		78EA42982B22A40E00E66AD9 /* OTTAppSampleProjectTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78EA429F2B22A40E00E66AD9 /* Build configuration list for PBXNativeTarget "OTTAppSampleProjectTests" */;
+			buildPhases = (
+				78EA42952B22A40E00E66AD9 /* Sources */,
+				78EA42962B22A40E00E66AD9 /* Frameworks */,
+				78EA42972B22A40E00E66AD9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78EA429E2B22A40E00E66AD9 /* PBXTargetDependency */,
+			);
+			name = OTTAppSampleProjectTests;
+			productName = OTTAppSampleProjectTests;
+			productReference = 78EA42992B22A40E00E66AD9 /* OTTAppSampleProjectTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -99,6 +147,10 @@
 				TargetAttributes = {
 					78EA427D2B22A3D400E66AD9 = {
 						CreatedOnToolsVersion = 15.0.1;
+					};
+					78EA42982B22A40E00E66AD9 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 78EA427D2B22A3D400E66AD9;
 					};
 				};
 			};
@@ -116,6 +168,7 @@
 			projectRoot = "";
 			targets = (
 				78EA427D2B22A3D400E66AD9 /* OTTAppSampleProject */,
+				78EA42982B22A40E00E66AD9 /* OTTAppSampleProjectTests */,
 			);
 		};
 /* End PBXProject section */
@@ -128,6 +181,13 @@
 				78EA428E2B22A3D500E66AD9 /* LaunchScreen.storyboard in Resources */,
 				78EA428B2B22A3D500E66AD9 /* Assets.xcassets in Resources */,
 				78EA42892B22A3D400E66AD9 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EA42972B22A40E00E66AD9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,7 +204,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		78EA42952B22A40E00E66AD9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78EA429C2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		78EA429E2B22A40E00E66AD9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78EA427D2B22A3D400E66AD9 /* OTTAppSampleProject */;
+			targetProxy = 78EA429D2B22A40E00E66AD9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		78EA42872B22A3D400E66AD9 /* Main.storyboard */ = {
@@ -341,6 +417,50 @@
 			};
 			name = Release;
 		};
+		78EA42A02B22A40E00E66AD9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5WNP4LSBY4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyeond.OTTAppSampleProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OTTAppSampleProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OTTAppSampleProject";
+			};
+			name = Debug;
+		};
+		78EA42A12B22A40E00E66AD9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5WNP4LSBY4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyeond.OTTAppSampleProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OTTAppSampleProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OTTAppSampleProject";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -358,6 +478,15 @@
 			buildConfigurations = (
 				78EA42932B22A3D500E66AD9 /* Debug */,
 				78EA42942B22A3D500E66AD9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78EA429F2B22A40E00E66AD9 /* Build configuration list for PBXNativeTarget "OTTAppSampleProjectTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78EA42A02B22A40E00E66AD9 /* Debug */,
+				78EA42A12B22A40E00E66AD9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
