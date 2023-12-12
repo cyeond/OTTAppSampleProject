@@ -90,3 +90,4 @@ fastlane/test_output
 iOSInjectionProject/
 OTTAppSampleProject/OTTAppSampleProject.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 OTTAppSampleProject/OTTAppSampleProject.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+.DS_Store
