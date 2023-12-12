@@ -12,9 +12,14 @@
 		788C55C82B281B6D008F74CB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 788C55C72B281B6D008F74CB /* RxCocoa */; };
 		788C55CA2B281B6D008F74CB /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 788C55C92B281B6D008F74CB /* RxSwift */; };
 		788C55CD2B281BE0008F74CB /* RxAlamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 788C55CC2B281BE0008F74CB /* RxAlamofire */; };
+		788C55D12B282C55008F74CB /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788C55D02B282C55008F74CB /* Section.swift */; };
+		788C55D32B282CBF008F74CB /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788C55D22B282CBF008F74CB /* Item.swift */; };
+		788C55D52B282CDE008F74CB /* TVContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788C55D42B282CDE008F74CB /* TVContent.swift */; };
+		788C55DA2B282EF0008F74CB /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788C55D92B282EF0008F74CB /* Content.swift */; };
+		788C55DC2B282F12008F74CB /* MovieContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788C55DB2B282F12008F74CB /* MovieContent.swift */; };
 		78EA42822B22A3D400E66AD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EA42812B22A3D400E66AD9 /* AppDelegate.swift */; };
 		78EA42842B22A3D400E66AD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EA42832B22A3D400E66AD9 /* SceneDelegate.swift */; };
-		78EA42862B22A3D400E66AD9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EA42852B22A3D400E66AD9 /* ViewController.swift */; };
+		78EA42862B22A3D400E66AD9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EA42852B22A3D400E66AD9 /* MainViewController.swift */; };
 		78EA42892B22A3D400E66AD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78EA42872B22A3D400E66AD9 /* Main.storyboard */; };
 		78EA428B2B22A3D500E66AD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78EA428A2B22A3D500E66AD9 /* Assets.xcassets */; };
 		78EA428E2B22A3D500E66AD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78EA428C2B22A3D500E66AD9 /* LaunchScreen.storyboard */; };
@@ -32,10 +37,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		788C55D02B282C55008F74CB /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		788C55D22B282CBF008F74CB /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		788C55D42B282CDE008F74CB /* TVContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVContent.swift; sourceTree = "<group>"; };
+		788C55D92B282EF0008F74CB /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
+		788C55DB2B282F12008F74CB /* MovieContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieContent.swift; sourceTree = "<group>"; };
 		78EA427E2B22A3D400E66AD9 /* OTTAppSampleProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTTAppSampleProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78EA42812B22A3D400E66AD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		78EA42832B22A3D400E66AD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		78EA42852B22A3D400E66AD9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		78EA42852B22A3D400E66AD9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		78EA42882B22A3D400E66AD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		78EA428A2B22A3D500E66AD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		78EA428D2B22A3D500E66AD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -67,6 +77,55 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		788C55CE2B282C06008F74CB /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				78EA42812B22A3D400E66AD9 /* AppDelegate.swift */,
+				78EA42832B22A3D400E66AD9 /* SceneDelegate.swift */,
+				78EA42872B22A3D400E66AD9 /* Main.storyboard */,
+				78EA428C2B22A3D500E66AD9 /* LaunchScreen.storyboard */,
+				78EA428A2B22A3D500E66AD9 /* Assets.xcassets */,
+				78EA428F2B22A3D500E66AD9 /* Info.plist */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		788C55CF2B282C49008F74CB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				788C55D02B282C55008F74CB /* Section.swift */,
+				788C55D22B282CBF008F74CB /* Item.swift */,
+				788C55D92B282EF0008F74CB /* Content.swift */,
+				788C55D42B282CDE008F74CB /* TVContent.swift */,
+				788C55DB2B282F12008F74CB /* MovieContent.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		788C55D62B282D75008F74CB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				78EA42852B22A3D400E66AD9 /* MainViewController.swift */,
+				788C55D72B282D88008F74CB /* Subviews */,
+				788C55D82B282D8F008F74CB /* Cells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		788C55D72B282D88008F74CB /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
+		788C55D82B282D8F008F74CB /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		78EA42752B22A3D400E66AD9 = {
 			isa = PBXGroup;
 			children = (
@@ -88,13 +147,9 @@
 		78EA42802B22A3D400E66AD9 /* OTTAppSampleProject */ = {
 			isa = PBXGroup;
 			children = (
-				78EA42812B22A3D400E66AD9 /* AppDelegate.swift */,
-				78EA42832B22A3D400E66AD9 /* SceneDelegate.swift */,
-				78EA42852B22A3D400E66AD9 /* ViewController.swift */,
-				78EA42872B22A3D400E66AD9 /* Main.storyboard */,
-				78EA428A2B22A3D500E66AD9 /* Assets.xcassets */,
-				78EA428C2B22A3D500E66AD9 /* LaunchScreen.storyboard */,
-				78EA428F2B22A3D500E66AD9 /* Info.plist */,
+				788C55CE2B282C06008F74CB /* Application */,
+				788C55CF2B282C49008F74CB /* Models */,
+				788C55D62B282D75008F74CB /* Views */,
 			);
 			path = OTTAppSampleProject;
 			sourceTree = "<group>";
@@ -221,8 +276,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78EA42862B22A3D400E66AD9 /* ViewController.swift in Sources */,
+				788C55DC2B282F12008F74CB /* MovieContent.swift in Sources */,
+				788C55D32B282CBF008F74CB /* Item.swift in Sources */,
+				78EA42862B22A3D400E66AD9 /* MainViewController.swift in Sources */,
+				788C55DA2B282EF0008F74CB /* Content.swift in Sources */,
+				788C55D12B282C55008F74CB /* Section.swift in Sources */,
 				78EA42822B22A3D400E66AD9 /* AppDelegate.swift in Sources */,
+				788C55D52B282CDE008F74CB /* TVContent.swift in Sources */,
 				78EA42842B22A3D400E66AD9 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,7 +453,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5WNP4LSBY4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = OTTAppSampleProject/Info.plist;
+				INFOPLIST_FILE = OTTAppSampleProject/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -421,7 +481,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5WNP4LSBY4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = OTTAppSampleProject/Info.plist;
+				INFOPLIST_FILE = OTTAppSampleProject/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
