@@ -5,8 +5,18 @@
 //  Created by YD on 12/12/23.
 //
 
-protocol Content: Hashable, Codable {
-    var title: String { get set }
-    var subtitle: String? { get set }
-    var imageUrl: String { get set }
+enum ContentType {
+    case tv
+    case movie
+}
+
+struct ContentData: Hashable, Codable {
+    var title: String
+    var subtitle: String?
+    var imageUrl: String
+}
+
+struct Content: Hashable {
+    var type: ContentType
+    var data: ContentData
 }
