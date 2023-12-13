@@ -29,7 +29,7 @@ class CellHeaderView: UICollectionReusableView {
             $0.edges.equalToSuperview()
         }
         
-        titleLabel.font = .boldSystemFont(ofSize: 20.0)
+        titleLabel.font = .systemFont(ofSize: 20.0, weight: .heavy)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .left
     }

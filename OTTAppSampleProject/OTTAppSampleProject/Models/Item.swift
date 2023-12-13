@@ -7,5 +7,7 @@
 
 enum Item: Hashable {
     case banner(Content)
-    case horizontalList(Content)
+    case listWithImage(Content)
+    case listWithImageAndTitle(Content)
+    case listWithImageAndNumber(Content)
 }

@@ -9,8 +9,8 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class HorizontalListCollectionViewCell: UICollectionViewCell {
-    static let identifier: String = "HorizontalListCollectionViewCell"
+class ListWithImageAndTitleCell: UICollectionViewCell {
+    static let identifier: String = "ListWithImageAndTitleCell"
     private let listImageView = UIImageView()
     private let titleLabel = UILabel()
     

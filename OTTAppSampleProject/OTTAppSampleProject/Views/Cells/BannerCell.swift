@@ -9,8 +9,8 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class BannerCollectionViewCell: UICollectionViewCell {
-    static let identifier: String = "BannerCollectionViewCell"
+class BannerCell: UICollectionViewCell {
+    static let identifier: String = "BannerCell"
     private let bannerImageView = UIImageView()
     private let titleLabel = UILabel()
     
