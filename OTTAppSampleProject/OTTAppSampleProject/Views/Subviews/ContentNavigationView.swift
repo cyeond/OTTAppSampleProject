@@ -25,7 +25,7 @@ class ContentNavigationView: UIView {
     private func setUI() {
         addSubview(contentsButtonStackView)
         contentsButtonStackView.axis = .horizontal
-        contentsButtonStackView.distribution = .equalSpacing
+        contentsButtonStackView.distribution = .fillEqually
         contentsButtonStackView.backgroundColor = .black
         contentsButtonStackView.addArrangedSubview(tvContentButton)
         contentsButtonStackView.addArrangedSubview(movieContentButton)
