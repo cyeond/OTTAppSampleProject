@@ -33,11 +33,15 @@ class BannerCollectionViewCell: UICollectionViewCell {
         }
         
         titleLabel.snp.makeConstraints {
-            $0.center.equalToSuperview()
+            $0.height.equalToSuperview().multipliedBy(0.1)
+            $0.leading.bottom.equalToSuperview().inset(15.0)
         }
         
         titleLabel.textColor = .white
-        titleLabel.font = .boldSystemFont(ofSize: 14.0)
+        titleLabel.font = .boldSystemFont(ofSize: 20.0)
+        
+        bannerImageView.clipsToBounds = true
+        bannerImageView.layer.cornerRadius = 10.0
     }
     
     func configure(data: ContentData) {

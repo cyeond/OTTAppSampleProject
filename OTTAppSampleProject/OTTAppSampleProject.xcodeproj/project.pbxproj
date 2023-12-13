@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78017B0A2B293D3E001D4F96 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78017B092B293D3E001D4F96 /* Constants.swift */; };
 		788C55C22B281B3C008F74CB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 788C55C12B281B3C008F74CB /* SnapKit */; };
 		788C55C52B281B46008F74CB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 788C55C42B281B46008F74CB /* Kingfisher */; };
 		788C55C82B281B6D008F74CB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 788C55C72B281B6D008F74CB /* RxCocoa */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		78017B092B293D3E001D4F96 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		788C55D02B282C55008F74CB /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		788C55D22B282CBF008F74CB /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		788C55D92B282EF0008F74CB /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
@@ -77,6 +79,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		78017B082B293D36001D4F96 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				78017B092B293D3E001D4F96 /* Constants.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		788C55CE2B282C06008F74CB /* Application */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +160,7 @@
 				788C55CE2B282C06008F74CB /* Application */,
 				788C55CF2B282C49008F74CB /* Models */,
 				788C55D62B282D75008F74CB /* Views */,
+				78017B082B293D36001D4F96 /* Utils */,
 			);
 			path = OTTAppSampleProject;
 			sourceTree = "<group>";
@@ -278,6 +289,7 @@
 			files = (
 				788C55D32B282CBF008F74CB /* Item.swift in Sources */,
 				788C55DE2B28316F008F74CB /* ContentNavigationView.swift in Sources */,
+				78017B0A2B293D3E001D4F96 /* Constants.swift in Sources */,
 				78EA42862B22A3D400E66AD9 /* MainViewController.swift in Sources */,
 				788C55DA2B282EF0008F74CB /* Content.swift in Sources */,
 				788C55D12B282C55008F74CB /* Section.swift in Sources */,
