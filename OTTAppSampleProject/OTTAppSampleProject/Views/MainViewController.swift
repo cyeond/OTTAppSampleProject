@@ -183,10 +183,10 @@ class MainViewController: UIViewController {
     }
     
     private func setDataSourceSnapshot() {
-        let bannerItems = DUMMY_ITEMS.map { Item.banner(Content(type: .tv, data: $0)) }
-        let list1Items = DUMMY_ITEMS.map { Item.listWithImageAndTitle(Content(type: .tv, data: $0)) }
-        let list2Items = DUMMY_ITEMS.map { Item.listWithImageAndNumber(Content(type: .tv, data: $0)) }
-        let list3Items = DUMMY_ITEMS.map { Item.listWithImage(Content(type: .tv, data: $0)) }
+        let bannerItems = Constants.DUMMY_ITEMS.map { Item.banner(Content(type: .tv, data: $0)) }
+        let list1Items = Constants.DUMMY_ITEMS.map { Item.listWithImageAndTitle(Content(type: .tv, data: $0)) }
+        let list2Items = Constants.DUMMY_ITEMS.map { Item.listWithImageAndNumber(Content(type: .tv, data: $0)) }
+        let list3Items = Constants.DUMMY_ITEMS.map { Item.listWithImage(Content(type: .tv, data: $0)) }
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
         snapshot.appendSections([Section(id: "Banner"), Section(id: "List1"), Section(id: "List2"), Section(id: "List3")])
