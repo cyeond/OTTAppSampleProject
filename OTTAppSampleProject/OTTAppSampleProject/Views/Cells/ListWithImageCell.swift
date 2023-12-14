@@ -35,6 +35,6 @@ class ListWithImageCell: UICollectionViewCell {
     }
     
     func configure(data: ContentData) {
-        listImageView.kf.setImage(with: URL(string: data.imageUrl))
+        listImageView.kf.setImage(with: URL(string: data.previewImageUrl))
     }
 }

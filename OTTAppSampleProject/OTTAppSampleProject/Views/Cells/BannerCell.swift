@@ -45,7 +45,7 @@ class BannerCell: UICollectionViewCell {
     }
     
     func configure(data: ContentData) {
-        self.titleLabel.text = data.title
-        self.bannerImageView.kf.setImage(with: URL(string: data.imageUrl))
+        self.titleLabel.text = (data.title != nil) ? data.title : data.name
+        self.bannerImageView.kf.setImage(with: URL(string: data.previewImageUrl))
     }
 }

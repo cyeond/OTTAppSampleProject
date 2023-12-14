@@ -32,7 +32,7 @@ class ListWithImageAndTitleCell: UICollectionViewCell {
         titleLabel.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-5.0)
-            $0.height.equalToSuperview().multipliedBy(0.1)
+            $0.height.equalToSuperview().multipliedBy(0.2)
         }
         
         listImageView.snp.makeConstraints {
@@ -43,6 +43,7 @@ class ListWithImageAndTitleCell: UICollectionViewCell {
         titleLabel.textAlignment = .left
         titleLabel.textColor = .white
         titleLabel.font = .boldSystemFont(ofSize: 14.0)
+        titleLabel.adjustsFontSizeToFitWidth = true
         
         listImageView.clipsToBounds = true
         listImageView.layer.cornerRadius = 5.0
@@ -50,6 +51,6 @@ class ListWithImageAndTitleCell: UICollectionViewCell {
     
     func configure(data: ContentData) {
         titleLabel.text = data.title
-        listImageView.kf.setImage(with: URL(string: data.imageUrl))
+        listImageView.kf.setImage(with: URL(string: data.previewImageUrl))
     }
 }

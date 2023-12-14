@@ -61,6 +61,6 @@ class ListWithImageAndNumberCell: UICollectionViewCell {
             ]
         )
         numberLabel.attributedText = attributedText
-        listImageView.kf.setImage(with: URL(string: data.imageUrl))
+        listImageView.kf.setImage(with: URL(string: data.previewImageUrl))
     }
 }
