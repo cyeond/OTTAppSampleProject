@@ -50,7 +50,7 @@ class ListWithImageAndTitleCell: UICollectionViewCell {
     }
     
     func configure(data: ContentData) {
-        titleLabel.text = data.title
+        titleLabel.text = (data.title != nil) ? data.title : data.name
         listImageView.kf.setImage(with: URL(string: data.previewImageUrl))
     }
 }

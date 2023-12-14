@@ -1,5 +1,5 @@
 //
-//  MainViewController.swift
+//  HomeViewController.swift
 //  OTTAppSampleProject
 //
 //  Created by YD on 12/8/23.
@@ -7,11 +7,14 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
-class MainViewController: UIViewController {
+class HomeViewController: UIViewController {
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>?
     private let contentNavigationView = ContentNavigationView()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .init())
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>?
+    private let viewModel = HomeViewModel()
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +22,7 @@ class MainViewController: UIViewController {
         setUI()
         setCollectionView()
         setDataSource()
-        setDataSourceSnapshot()
+        bind()
     }
     
     private func setUI() {
@@ -55,16 +58,17 @@ class MainViewController: UIViewController {
         
         return UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, environment in
             switch self?.dataSource?.snapshot().sectionIdentifiers[sectionIndex].id {
-            case "Banner":
-                return self?.createBannerSection()
             case "List1":
                 return self?.createList1Section()
             case "List2":
                 return self?.createList2Section()
             case "List3":
                 return self?.createList3Section()
+            case "List4":
+                return self?.createList4Section()
             default:
-                return self?.createList1Section()
+                // "Banner" section
+                return self?.createBannerSection()
             }
         }, configuration: layoutConfig)
     }
@@ -86,14 +90,14 @@ class MainViewController: UIViewController {
     private func createList1Section() -> NSCollectionLayoutSection {
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
-        header.contentInsets = .init(top: 0, leading: 5.0, bottom: 0, trailing: 5.0)
+        header.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 10.0)
         
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4), heightDimension: .absolute(100.0))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4), heightDimension: .absolute(200.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.contentInsets = .init(top: 0, leading: 5.0, bottom: 0, trailing: 5.0)
+        group.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .paging
@@ -105,14 +109,14 @@ class MainViewController: UIViewController {
     private func createList2Section() -> NSCollectionLayoutSection {
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
-        header.contentInsets = .init(top: 0, leading: 5.0, bottom: 0, trailing: 5.0)
+        header.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 10.0)
         
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4), heightDimension: .absolute(150.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.contentInsets = .init(top: 0, leading: 5.0, bottom: 0, trailing: 5.0)
+        group.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .paging
@@ -124,14 +128,33 @@ class MainViewController: UIViewController {
     private func createList3Section() -> NSCollectionLayoutSection {
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
-        header.contentInsets = .init(top: 0, leading: 5.0, bottom: 0, trailing: 5.0)
+        header.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 10.0)
         
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .absolute(150.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.contentInsets = .init(top: 0, leading: 5.0, bottom: 0, trailing: 5.0)
+        group.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .paging
+        section.boundarySupplementaryItems = [header]
+        
+        return section
+    }
+    
+    private func createList4Section() -> NSCollectionLayoutSection {
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
+        header.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 10.0)
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .absolute(150.0))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .paging
@@ -166,35 +189,51 @@ class MainViewController: UIViewController {
             switch self.dataSource?.snapshot().sectionIdentifiers[IndexPath.section].id {
             case "List1":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "시청 중인 콘텐츠")
+                cellHeaderView.configure(title: "실시간 방영 중인 콘텐츠")
                 return cellHeaderView
             case "List2":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "인기 TOP 20 콘텐츠")
+                cellHeaderView.configure(title: "인기 TOP 20")
                 return cellHeaderView
             case "List3":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "새로 나온 콘텐츠")
+                cellHeaderView.configure(title: "평점이 높은")
+                return cellHeaderView
+            case "List4":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
+                cellHeaderView.configure(title: "유명한")
                 return cellHeaderView
             default:
                 return nil
             }
         }
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([Section(id: "Banner"), Section(id: "List1"), Section(id: "List2"), Section(id: "List3"), Section(id: "List4")])
+        dataSource?.apply(snapshot)
     }
     
-    private func setDataSourceSnapshot() {
-        let bannerItems = Constants.DUMMY_ITEMS.map { Item.banner(Content(type: .tv, data: $0)) }
-        let list1Items = Constants.DUMMY_ITEMS.map { Item.listWithImageAndTitle(Content(type: .tv, data: $0)) }
-        let list2Items = Constants.DUMMY_ITEMS.map { Item.listWithImageAndNumber(Content(type: .tv, data: $0)) }
-        let list3Items = Constants.DUMMY_ITEMS.map { Item.listWithImage(Content(type: .tv, data: $0)) }
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-
-        snapshot.appendSections([Section(id: "Banner"), Section(id: "List1"), Section(id: "List2"), Section(id: "List3")])
-        snapshot.appendItems(bannerItems, toSection: Section(id: "Banner"))
-        snapshot.appendItems(list1Items, toSection: Section(id: "List1"))
-        snapshot.appendItems(list2Items, toSection: Section(id: "List2"))
-        snapshot.appendItems(list3Items, toSection: Section(id: "List3"))
-        
-        dataSource?.apply(snapshot)
+    private func bind() {
+        viewModel.tvResults
+            .withUnretained(self)
+            .observe(on: MainScheduler())
+            .bind { weakSelf, results in
+                guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
+                
+                let bannerItems = results[0].results.map { Item.banner(Content(type: .tv, data: $0)) }
+                let list1Items = results[1].results.map { Item.listWithImageAndTitle(Content(type: .tv, data: $0)) }
+                let list2Items = results[2].results.map { Item.listWithImageAndNumber(Content(type: .tv, data: $0)) }
+                let list3Items = results[3].results.map { Item.listWithImage(Content(type: .tv, data: $0)) }
+                let list4Items = results[4].results.map { Item.listWithImage(Content(type: .tv, data: $0)) }
+                
+                snapshot.appendItems(bannerItems, toSection: Section(id: "Banner"))
+                snapshot.appendItems(list1Items, toSection: Section(id: "List1"))
+                snapshot.appendItems(list2Items, toSection: Section(id: "List2"))
+                snapshot.appendItems(list3Items, toSection: Section(id: "List3"))
+                snapshot.appendItems(list4Items, toSection: Section(id: "List4"))
+                
+                weakSelf.dataSource?.apply(snapshot)
+            }
+            .disposed(by: disposeBag)
     }
 }
