@@ -11,6 +11,8 @@ import RxSwift
 
 class HomeViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>?
+    private var tvDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
+    private var movieDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     private let contentNavigationView = ContentNavigationView()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .init())
     private let viewModel = HomeViewModel()
@@ -58,13 +60,13 @@ class HomeViewController: UIViewController {
         
         return UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, environment in
             switch self?.dataSource?.snapshot().sectionIdentifiers[sectionIndex].id {
-            case "List1":
+            case "TVList1", "MovieList1":
                 return self?.createList1Section()
-            case "List2":
+            case "TVList2", "MovieList2":
                 return self?.createList2Section()
-            case "List3":
+            case "TVList3", "MovieList3":
                 return self?.createList3Section()
-            case "List4":
+            case "TVList4", "MovieList4":
                 return self?.createList4Section()
             default:
                 // "Banner" section
@@ -185,32 +187,54 @@ class HomeViewController: UIViewController {
             }
         })
         
-        dataSource?.supplementaryViewProvider = { collectionView, kind, IndexPath -> UICollectionReusableView? in
-            switch self.dataSource?.snapshot().sectionIdentifiers[IndexPath.section].id {
-            case "List1":
-                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
+        dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+            switch self.dataSource?.snapshot().sectionIdentifiers[indexPath.section].id {
+            case "TVList1":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
                 cellHeaderView.configure(title: "실시간 방영 중")
                 return cellHeaderView
-            case "List2":
-                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
+            case "TVList2":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
                 cellHeaderView.configure(title: "인기 TOP 20")
                 return cellHeaderView
-            case "List3":
-                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
+            case "TVList3":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
                 cellHeaderView.configure(title: "평점이 높은 콘텐츠")
                 return cellHeaderView
-            case "List4":
-                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
+            case "TVList4":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
                 cellHeaderView.configure(title: "유명 TV 프로그램")
+                return cellHeaderView
+            case "MovieList1":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
+                cellHeaderView.configure(title: "현재 상영 중")
+                return cellHeaderView
+            case "MovieList2":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
+                cellHeaderView.configure(title: "인기 TOP 20")
+                return cellHeaderView
+            case "MovieList3":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
+                cellHeaderView.configure(title: "평점이 높은 작품")
+                return cellHeaderView
+            case "MovieList4":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
+                cellHeaderView.configure(title: "유명 영화")
                 return cellHeaderView
             default:
                 return nil
             }
         }
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([Section(id: "Banner"), Section(id: "List1"), Section(id: "List2"), Section(id: "List3"), Section(id: "List4")])
-        dataSource?.apply(snapshot)
+        var tvSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        var movieSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        
+        tvSnapshot.appendSections([Section(id: "Banner"), Section(id: "TVList1"), Section(id: "TVList2"), Section(id: "TVList3"), Section(id: "TVList4")])
+        movieSnapshot.appendSections([Section(id: "Banner"), Section(id: "MovieList1"), Section(id: "MovieList2"), Section(id: "MovieList3"), Section(id: "MovieList4")])
+        
+        self.dataSource?.apply(tvSnapshot)
+        self.tvDataSnapshot = tvSnapshot
+        self.movieDataSnapshot = movieSnapshot
     }
     
     private func bind() {
@@ -218,7 +242,7 @@ class HomeViewController: UIViewController {
             .withUnretained(self)
             .observe(on: MainScheduler())
             .bind { weakSelf, results in
-                guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
+                guard var snapshot = weakSelf.tvDataSnapshot else { return }
                 
                 let bannerItems = results[0].results.map { Item.banner(Content(type: .tv, data: $0)) }
                 let list1Items = results[1].results.map { Item.listWithImageAndTitle(Content(type: .tv, data: $0)) }
@@ -227,12 +251,48 @@ class HomeViewController: UIViewController {
                 let list4Items = results[4].results.map { Item.listWithImage(Content(type: .tv, data: $0)) }
                 
                 snapshot.appendItems(bannerItems, toSection: Section(id: "Banner"))
-                snapshot.appendItems(list1Items, toSection: Section(id: "List1"))
-                snapshot.appendItems(list2Items, toSection: Section(id: "List2"))
-                snapshot.appendItems(list3Items, toSection: Section(id: "List3"))
-                snapshot.appendItems(list4Items, toSection: Section(id: "List4"))
+                snapshot.appendItems(list1Items, toSection: Section(id: "TVList1"))
+                snapshot.appendItems(list2Items, toSection: Section(id: "TVList2"))
+                snapshot.appendItems(list3Items, toSection: Section(id: "TVList3"))
+                snapshot.appendItems(list4Items, toSection: Section(id: "TVList4"))
                 
                 weakSelf.dataSource?.apply(snapshot)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.movieResults
+            .withUnretained(self)
+            .observe(on: MainScheduler())
+            .bind { weakSelf, results in
+                guard var snapshot = weakSelf.movieDataSnapshot else { return }
+                
+                let bannerItems = results[0].results.map { Item.banner(Content(type: .movie, data: $0)) }
+                let list1Items = results[1].results.map { Item.listWithImageAndTitle(Content(type: .movie, data: $0)) }
+                let list2Items = results[2].results.map { Item.listWithImageAndNumber(Content(type: .movie, data: $0)) }
+                let list3Items = results[3].results.map { Item.listWithImage(Content(type: .movie, data: $0)) }
+                let list4Items = results[4].results.map { Item.listWithImage(Content(type: .movie, data: $0)) }
+                
+                snapshot.appendItems(bannerItems, toSection: Section(id: "Banner"))
+                snapshot.appendItems(list1Items, toSection: Section(id: "MovieList1"))
+                snapshot.appendItems(list2Items, toSection: Section(id: "MovieList2"))
+                snapshot.appendItems(list3Items, toSection: Section(id: "MovieList3"))
+                snapshot.appendItems(list4Items, toSection: Section(id: "MovieList4"))
+                
+                weakSelf.dataSource?.apply(snapshot)
+            }
+            .disposed(by: disposeBag)
+        
+        contentNavigationView.tvContentButton.rx.tap
+            .observe(on: MainScheduler())
+            .bind {
+                self.viewModel.getTVResults()
+            }
+            .disposed(by: disposeBag)
+        
+        contentNavigationView.movieContentButton.rx.tap
+            .observe(on: MainScheduler())
+            .bind {
+                self.viewModel.getMovieResults()
             }
             .disposed(by: disposeBag)
     }

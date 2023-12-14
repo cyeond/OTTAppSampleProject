@@ -10,8 +10,9 @@ import SnapKit
 
 class ContentNavigationView: UIView {
     private let contentsButtonStackView = UIStackView()
-    private let tvContentButton = UIButton()
-    private let movieContentButton = UIButton()
+    let tvContentButton = UIButton()
+    let movieContentButton = UIButton()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
