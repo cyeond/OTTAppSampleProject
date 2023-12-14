@@ -189,7 +189,7 @@ class HomeViewController: UIViewController {
             switch self.dataSource?.snapshot().sectionIdentifiers[IndexPath.section].id {
             case "List1":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "실시간 방영 중인 콘텐츠")
+                cellHeaderView.configure(title: "실시간 방영 중")
                 return cellHeaderView
             case "List2":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
@@ -197,11 +197,11 @@ class HomeViewController: UIViewController {
                 return cellHeaderView
             case "List3":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "평점이 높은")
+                cellHeaderView.configure(title: "평점이 높은 콘텐츠")
                 return cellHeaderView
             case "List4":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: IndexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "유명한")
+                cellHeaderView.configure(title: "유명 TV 프로그램")
                 return cellHeaderView
             default:
                 return nil
