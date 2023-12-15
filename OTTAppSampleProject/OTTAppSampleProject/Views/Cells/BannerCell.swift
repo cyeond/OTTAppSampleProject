@@ -24,6 +24,12 @@ class BannerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        setGradientLayer(bannerImageView)
+    }
+    
     private func setUI() {
         addSubview(bannerImageView)
         addSubview(titleLabel)
@@ -47,5 +53,20 @@ class BannerCell: UICollectionViewCell {
     func configure(data: ContentData) {
         self.titleLabel.text = (data.title != nil) ? data.title : data.name
         self.bannerImageView.kf.setImage(with: URL(string: data.previewImageUrl))
+    }
+    
+    private func setGradientLayer(_ view: UIView) {
+        guard view.tag != 1000 else { return }
+        
+        let colors: [CGColor] = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        let gradientLayer = CAGradientLayer()
+        
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = colors
+        gradientLayer.locations = [0.5, 1.0]
+        gradientLayer.opacity = 0.6
+        
+        view.layer.insertSublayer(gradientLayer, at: 0)
+        view.tag = 1000
     }
 }
