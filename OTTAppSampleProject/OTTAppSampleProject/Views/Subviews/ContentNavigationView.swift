@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import RxSwift
 import SnapKit
 
 class ContentNavigationView: UIView {
     private let contentsButtonStackView = UIStackView()
     let tvContentButton = UIButton()
     let movieContentButton = UIButton()
+    let contentTypeChangedSubject = PublishSubject<ContentType>()
+    private let disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,5 +48,22 @@ class ContentNavigationView: UIView {
             $0.verticalEdges.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(20.0)
         }
+    
+    private func bind() {
+        tvContentButton.rx.tap
+            .withUnretained(self)
+            .observe(on: MainScheduler())
+            .bind { _ in
+                self.contentTypeChangedSubject.onNext(.tv)
+            }
+            .disposed(by: disposeBag)
+        
+        movieContentButton.rx.tap
+            .withUnretained(self)
+            .observe(on: MainScheduler())
+            .bind { _ in
+                self.contentTypeChangedSubject.onNext(.movie)
+            }
+            .disposed(by: disposeBag)
     }
 }

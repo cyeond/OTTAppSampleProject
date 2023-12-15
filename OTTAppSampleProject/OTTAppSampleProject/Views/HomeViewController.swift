@@ -282,18 +282,17 @@ class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        contentNavigationView.tvContentButton.rx.tap
-            .observe(on: MainScheduler())
-            .bind {
-                self.viewModel.getTVResults()
+        contentNavigationView.contentTypeChangedSubject.asObservable()
+            .bind { type in
+                switch type {
+                case .tv:
+                    self.viewModel.getTVResults()
+                case .movie:
+                    self.viewModel.getMovieResults()
+                }
             }
             .disposed(by: disposeBag)
         
-        contentNavigationView.movieContentButton.rx.tap
-            .observe(on: MainScheduler())
-            .bind {
-                self.viewModel.getMovieResults()
-            }
-            .disposed(by: disposeBag)
+        contentNavigationView.contentTypeChangedSubject.onNext(.tv)
     }
 }
