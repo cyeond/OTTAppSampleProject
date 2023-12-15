@@ -20,6 +20,7 @@ class ContentNavigationView: UIView {
         super.init(frame: frame)
         
         setUI()
+        bind()
     }
     
     required init?(coder: NSCoder) {

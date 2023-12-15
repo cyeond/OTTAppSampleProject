@@ -12,7 +12,6 @@ import RxAlamofire
 struct API {
     static func getData(type: APIType) -> Observable<APIResult> {
         return RxAlamofire.data(.get, type.url)
-            .debug()
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .map { try JSONDecoder().decode(APIResult.self, from: $0) }
             
