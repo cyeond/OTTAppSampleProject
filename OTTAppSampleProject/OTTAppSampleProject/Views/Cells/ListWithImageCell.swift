@@ -11,6 +11,7 @@ import Kingfisher
 
 class ListWithImageCell: UICollectionViewCell {
     static let identifier = "ListWithImageCell"
+    private let previewImageButton = UIButton()
     private let listImageView = UIImageView()
     
     override init(frame: CGRect) {
@@ -24,17 +25,17 @@ class ListWithImageCell: UICollectionViewCell {
     }
     
     private func setUI() {
-        addSubview(listImageView)
+        addSubview(previewImageButton)
         
-        listImageView.snp.makeConstraints {
+        previewImageButton.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
-        listImageView.clipsToBounds = true
-        listImageView.layer.cornerRadius = 5.0
+        previewImageButton.clipsToBounds = true
+        previewImageButton.layer.cornerRadius = 5.0
     }
     
     func configure(data: ContentData) {
-        listImageView.kf.setImage(with: URL(string: data.previewImageUrl))
+        previewImageButton.kf.setImage(with: URL(string: data.previewImageUrl), for: .normal)
     }
 }
