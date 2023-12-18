@@ -13,6 +13,8 @@ class BannerCell: UICollectionViewCell {
     static let identifier: String = "BannerCell"
     private let bannerImageView = UIImageView()
     private let titleLabel = UILabel()
+    private let infoLabel = UILabel()
+    private let playButton = UIButton()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,26 +34,56 @@ class BannerCell: UICollectionViewCell {
     
     private func setUI() {
         addSubview(bannerImageView)
+        addSubview(playButton)
+        addSubview(infoLabel)
         addSubview(titleLabel)
         
         bannerImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
-        titleLabel.snp.makeConstraints {
-            $0.height.equalToSuperview().multipliedBy(0.1)
+        playButton.snp.makeConstraints {
             $0.leading.bottom.equalToSuperview().inset(15.0)
+            $0.height.equalTo(35.0)
+            $0.width.equalTo(120.0)
         }
         
-        titleLabel.textColor = .white
-        titleLabel.font = .boldSystemFont(ofSize: 20.0)
+        infoLabel.snp.makeConstraints {
+            $0.height.equalTo(30.0)
+            $0.horizontalEdges.equalToSuperview().inset(15.0)
+            $0.bottom.equalTo(playButton.snp.top)
+        }
+        
+        titleLabel.snp.makeConstraints {
+            $0.height.equalTo(30.0)
+            $0.horizontalEdges.equalToSuperview().inset(15.0)
+            $0.bottom.equalTo(infoLabel.snp.top)
+        }
         
         bannerImageView.clipsToBounds = true
         bannerImageView.layer.cornerRadius = 10.0
+        
+        playButton.backgroundColor = .systemBlue
+        playButton.clipsToBounds = true
+        playButton.layer.cornerRadius = 5.0
+        playButton.setTitle("▶︎   재생하기", for: .normal)
+        playButton.setTitleColor(.white, for: .normal)
+        playButton.titleLabel?.font = .systemFont(ofSize: 15.0, weight: .heavy)
+        
+        infoLabel.textColor = .white
+        infoLabel.font = .boldSystemFont(ofSize: 14.0)
+        
+        titleLabel.textColor = .white
+        titleLabel.font = .boldSystemFont(ofSize: 18.0)
     }
     
     func configure(data: ContentData) {
+        let rating = Double(Int(data.voteAverage*10))/10.0
+        let originalLanguage = " ∙ " + data.originalLanguage
+        let releaseDate = data.releaseDate != nil ? " ∙ " + data.releaseDate! : ""
+        
         self.titleLabel.text = (data.title != nil) ? data.title : data.name
+        self.infoLabel.text = "⭐️ \(rating)\(originalLanguage)\(releaseDate)"
         self.bannerImageView.kf.setImage(with: URL(string: data.previewImageUrl))
     }
     
@@ -63,7 +95,7 @@ class BannerCell: UICollectionViewCell {
         
         gradientLayer.frame = view.bounds
         gradientLayer.colors = colors
-        gradientLayer.locations = [0.5, 1.0]
+        gradientLayer.locations = [0.3, 1.0]
         gradientLayer.opacity = 0.6
         
         view.layer.insertSublayer(gradientLayer, at: 0)
