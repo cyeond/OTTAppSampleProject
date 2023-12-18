@@ -14,6 +14,7 @@ class ContentNavigationView: UIView {
     let tvContentButton = UIButton()
     let movieContentButton = UIButton()
     let contentTypeChangedSubject = PublishSubject<ContentType>()
+    private let underlineView = UIView()
     private let disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
@@ -35,6 +36,8 @@ class ContentNavigationView: UIView {
         contentsButtonStackView.addArrangedSubview(tvContentButton)
         contentsButtonStackView.addArrangedSubview(movieContentButton)
         
+        tvContentButton.addSubview(underlineView)
+        
         tvContentButton.setTitle("TV", for: .normal)
         tvContentButton.setTitleColor(.white, for: .normal)
         tvContentButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
@@ -45,10 +48,20 @@ class ContentNavigationView: UIView {
         movieContentButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         movieContentButton.tag = 2
         
+        underlineView.backgroundColor = .white
+        
         contentsButtonStackView.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(20.0)
         }
+        
+        underlineView.snp.makeConstraints {
+            $0.bottom.equalTo(contentsButtonStackView).inset(5.0)
+            $0.centerX.equalTo(tvContentButton)
+            $0.width.equalTo(50.0)
+            $0.height.equalTo(5.0)
+        }
+    }
     
     private func bind() {
         tvContentButton.rx.tap
