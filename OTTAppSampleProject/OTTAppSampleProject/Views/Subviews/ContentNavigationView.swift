@@ -10,11 +10,12 @@ import RxSwift
 import SnapKit
 
 class ContentNavigationView: UIView {
-    private let contentsButtonStackView = UIStackView()
-    let tvContentButton = UIButton()
-    let movieContentButton = UIButton()
     let contentTypeChangedSubject = PublishSubject<ContentType>()
+    private let contentsButtonStackView = UIStackView()
+    private let tvContentButton = UIButton()
+    private let movieContentButton = UIButton()
     private let underlineView = UIView()
+    private var underlineViewConstraint: Constraint?
     private let disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
@@ -26,6 +27,11 @@ class ContentNavigationView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.underlineViewConstraint?.update(inset: contentsButtonStackView.frame.width/4 - 25)
     }
     
     private func setUI() {
@@ -57,9 +63,9 @@ class ContentNavigationView: UIView {
         
         underlineView.snp.makeConstraints {
             $0.bottom.equalTo(contentsButtonStackView).inset(5.0)
-            $0.centerX.equalTo(tvContentButton)
             $0.width.equalTo(50.0)
             $0.height.equalTo(5.0)
+            self.underlineViewConstraint = $0.leading.equalToSuperview().constraint
         }
     }
     
@@ -69,6 +75,7 @@ class ContentNavigationView: UIView {
             .observe(on: MainScheduler())
             .bind { _ in
                 self.contentTypeChangedSubject.onNext(.tv)
+                self.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width/4 - 25)
             }
             .disposed(by: disposeBag)
         
@@ -77,6 +84,7 @@ class ContentNavigationView: UIView {
             .observe(on: MainScheduler())
             .bind { _ in
                 self.contentTypeChangedSubject.onNext(.movie)
+                self.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width*3/4 - 25)
             }
             .disposed(by: disposeBag)
     }
