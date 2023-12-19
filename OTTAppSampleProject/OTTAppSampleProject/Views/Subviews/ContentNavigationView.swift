@@ -72,19 +72,17 @@ class ContentNavigationView: UIView {
     private func bind() {
         tvContentButton.rx.tap
             .withUnretained(self)
-            .observe(on: MainScheduler.instance)
-            .bind { _ in
-                self.contentTypeChangedSubject.onNext(.tv)
-                self.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width/4 - 25)
+            .bind { weakSelf, _ in
+                weakSelf.contentTypeChangedSubject.onNext(.tv)
+                weakSelf.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width/4 - 25)
             }
             .disposed(by: disposeBag)
         
         movieContentButton.rx.tap
             .withUnretained(self)
-            .observe(on: MainScheduler.instance)
-            .bind { _ in
-                self.contentTypeChangedSubject.onNext(.movie)
-                self.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width*3/4 - 25)
+            .bind { weakSelf, _ in
+                weakSelf.contentTypeChangedSubject.onNext(.movie)
+                weakSelf.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width*3/4 - 25)
             }
             .disposed(by: disposeBag)
     }
