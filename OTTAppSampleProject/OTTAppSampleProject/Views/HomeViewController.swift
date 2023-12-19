@@ -15,6 +15,8 @@ class HomeViewController: UIViewController {
     private var movieDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     private let contentNavigationView = ContentNavigationView()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .init())
+    private let refreshControl = UIRefreshControl()
+    private let blackCoverView = UIView()
     private let viewModel = HomeViewModel()
     private let disposeBag = DisposeBag()
     
@@ -31,6 +33,10 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .black
         view.addSubview(contentNavigationView)
         view.addSubview(collectionView)
+        view.addSubview(blackCoverView)
+        
+        blackCoverView.backgroundColor = .black
+        refreshControl.tintColor = .white
         
         contentNavigationView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
@@ -42,10 +48,15 @@ class HomeViewController: UIViewController {
             $0.top.equalTo(contentNavigationView.snp.bottom)
             $0.horizontalEdges.bottom.equalToSuperview()
         }
+        
+        blackCoverView.snp.makeConstraints {
+            $0.edges.equalTo(collectionView.snp.edges)
+        }
     }
     
     private func setCollectionView() {
         collectionView.backgroundColor = .black
+        collectionView.refreshControl = self.refreshControl
         collectionView.register(BannerCell.self, forCellWithReuseIdentifier: BannerCell.identifier)
         collectionView.register(ListWithImageCell.self, forCellWithReuseIdentifier: ListWithImageCell.identifier)
         collectionView.register(ListWithImageAndTitleCell.self, forCellWithReuseIdentifier: ListWithImageAndTitleCell.identifier)
@@ -240,7 +251,7 @@ class HomeViewController: UIViewController {
     private func bind() {
         viewModel.tvResults
             .withUnretained(self)
-            .observe(on: MainScheduler())
+            .observe(on: MainScheduler.instance)
             .bind { weakSelf, results in
                 guard var snapshot = weakSelf.tvDataSnapshot else { return }
                 
@@ -257,12 +268,14 @@ class HomeViewController: UIViewController {
                 snapshot.appendItems(list4Items, toSection: Section(id: "TVList4"))
                 
                 weakSelf.dataSource?.apply(snapshot)
+                
+                weakSelf.endRefreshing()
             }
             .disposed(by: disposeBag)
         
         viewModel.movieResults
             .withUnretained(self)
-            .observe(on: MainScheduler())
+            .observe(on: MainScheduler.instance)
             .bind { weakSelf, results in
                 guard var snapshot = weakSelf.movieDataSnapshot else { return }
                 
@@ -279,20 +292,39 @@ class HomeViewController: UIViewController {
                 snapshot.appendItems(list4Items, toSection: Section(id: "MovieList4"))
                 
                 weakSelf.dataSource?.apply(snapshot)
+                
+                weakSelf.endRefreshing()
             }
             .disposed(by: disposeBag)
         
         contentNavigationView.contentTypeChangedSubject.asObservable()
-            .bind { type in
-                switch type {
-                case .tv:
-                    self.viewModel.getTVResults()
-                case .movie:
-                    self.viewModel.getMovieResults()
-                }
+            .withUnretained(self)
+            .bind { weakSelf, type in
+                weakSelf.blackCoverView.isHidden = false
+                weakSelf.viewModel.currentContentType = type
+                weakSelf.viewModel.getResultsData()
+            }
+            .disposed(by: disposeBag)
+        
+        refreshControl.rx.controlEvent(.valueChanged)
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.blackCoverView.isHidden = false
+                weakSelf.viewModel.getResultsData()
             }
             .disposed(by: disposeBag)
         
         contentNavigationView.contentTypeChangedSubject.onNext(.tv)
+    }
+    
+    private func endRefreshing() {
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredVertically, animated: false)
+        refreshControl.endRefreshing()
+        Observable.just(()).delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.blackCoverView.isHidden = true
+            }
+            .disposed(by: disposeBag)
     }
 }

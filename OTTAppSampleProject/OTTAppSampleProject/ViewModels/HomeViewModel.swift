@@ -11,8 +11,18 @@ import RxSwift
 class HomeViewModel: ObservableObject {
     var tvResults = PublishSubject<[APIResult]>()
     var movieResults = PublishSubject<[APIResult]>()
+    var currentContentType: ContentType = .tv
     
     private let disposeBag = DisposeBag()
+    
+    func getResultsData() {
+        switch currentContentType {
+        case .tv:
+            getTVResults()
+        case .movie:
+            getMovieResults()
+        }
+    }
     
     func getTVResults() {
         Observable.combineLatest(API.getData(type: .onTheAirTV), API.getData(type: .airingTodayTV), API.getData(type: .weeklyTrending(.tv)), API.getData(type: .topRated(.tv)), API.getData(type: .popular(.tv)))
