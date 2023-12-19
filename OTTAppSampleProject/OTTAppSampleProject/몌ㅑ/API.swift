@@ -14,6 +14,5 @@ struct API {
         return RxAlamofire.data(.get, type.url)
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .map { try JSONDecoder().decode(APIResult.self, from: $0) }
-            
     }
 }

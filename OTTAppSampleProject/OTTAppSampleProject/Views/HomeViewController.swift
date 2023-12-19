@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import RxSwift
+import RxRelay
 
 class HomeViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>?
@@ -36,7 +37,7 @@ class HomeViewController: UIViewController {
         view.addSubview(blackCoverView)
         
         blackCoverView.backgroundColor = .black
-        refreshControl.tintColor = .white
+        refreshControl.tintColor = .clear
         
         contentNavigationView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
@@ -249,11 +250,10 @@ class HomeViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.tvResults
-            .withUnretained(self)
-            .observe(on: MainScheduler.instance)
-            .bind { weakSelf, results in
-                guard var snapshot = weakSelf.tvDataSnapshot else { return }
+        viewModel.tvResultsRelay
+            .asDriver()
+            .drive(with: self) { weakSelf, results in
+                guard var snapshot = weakSelf.tvDataSnapshot, results.count == 5 else { return }
                 
                 let bannerItems = results[0].results.map { Item.banner(Content(type: .tv, data: $0)) }
                 let list1Items = results[1].results.map { Item.listWithImageAndTitle(Content(type: .tv, data: $0)) }
@@ -273,11 +273,10 @@ class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        viewModel.movieResults
-            .withUnretained(self)
-            .observe(on: MainScheduler.instance)
-            .bind { weakSelf, results in
-                guard var snapshot = weakSelf.movieDataSnapshot else { return }
+        viewModel.movieResultsRelay
+            .asDriver()
+            .drive(with: self) { weakSelf, results in
+                guard var snapshot = weakSelf.movieDataSnapshot, results.count == 5 else { return }
                 
                 let bannerItems = results[0].results.map { Item.banner(Content(type: .movie, data: $0)) }
                 let list1Items = results[1].results.map { Item.listWithImageAndTitle(Content(type: .movie, data: $0)) }
