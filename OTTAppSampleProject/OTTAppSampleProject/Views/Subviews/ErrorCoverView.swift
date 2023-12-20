@@ -35,9 +35,9 @@ class ErrorCoverView: UIView {
         errorLabel.textAlignment = .center
         errorLabel.numberOfLines = 1
         errorLabel.font = .systemFont(ofSize: 17.0, weight: .heavy)
-        errorLabel.text = "페이지를 불러오지 못했습니다"
+        errorLabel.text = "load_failure_label_text".localized
         
-        refreshButton.setTitle("새로고침", for: .normal)
+        refreshButton.setTitle("reload".localized, for: .normal)
         refreshButton.setTitleColor(.white, for: .normal)
         refreshButton.titleLabel?.font = .systemFont(ofSize: 13.0, weight: .heavy)
         refreshButton.backgroundColor = .lightGray

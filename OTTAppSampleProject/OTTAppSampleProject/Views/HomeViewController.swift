@@ -210,35 +210,35 @@ class HomeViewController: UIViewController {
             switch self.dataSource?.snapshot().sectionIdentifiers[indexPath.section].id {
             case "TVList1":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "실시간 방영 중")
+                cellHeaderView.configure(title: "on_the_air".localized)
                 return cellHeaderView
             case "TVList2":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "인기 TOP 20")
+                cellHeaderView.configure(title: "top_trending_20".localized)
                 return cellHeaderView
             case "TVList3":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "평점이 높은 콘텐츠")
+                cellHeaderView.configure(title: "top_rated_contents".localized)
                 return cellHeaderView
             case "TVList4":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "유명 TV 프로그램")
+                cellHeaderView.configure(title: "popular_tv_programs".localized)
                 return cellHeaderView
             case "MovieList1":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "현재 상영 중")
+                cellHeaderView.configure(title: "now_playing".localized)
                 return cellHeaderView
             case "MovieList2":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "인기 TOP 20")
+                cellHeaderView.configure(title: "top_trending_20".localized)
                 return cellHeaderView
             case "MovieList3":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "평점이 높은 작품")
+                cellHeaderView.configure(title: "top_rated_movies".localized)
                 return cellHeaderView
             case "MovieList4":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
-                cellHeaderView.configure(title: "유명 영화")
+                cellHeaderView.configure(title: "popular_movies".localized)
                 return cellHeaderView
             default:
                 return nil

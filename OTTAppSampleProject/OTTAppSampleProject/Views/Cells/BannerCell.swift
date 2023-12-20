@@ -66,7 +66,7 @@ class BannerCell: UICollectionViewCell {
         playButton.backgroundColor = .systemBlue
         playButton.clipsToBounds = true
         playButton.layer.cornerRadius = 5.0
-        playButton.setTitle("▶︎   재생하기", for: .normal)
+        playButton.setTitle("play_button_title".localized, for: .normal)
         playButton.setTitleColor(.white, for: .normal)
         playButton.titleLabel?.font = .systemFont(ofSize: 15.0, weight: .heavy)
         

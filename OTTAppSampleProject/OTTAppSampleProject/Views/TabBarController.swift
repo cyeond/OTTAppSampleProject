@@ -23,10 +23,10 @@ class TabBarController: UITabBarController {
     
     private func setViewControllers() {
         let homeVC = HomeViewController()
-        homeVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "house"), tag: 0)
+        homeVC.tabBarItem = UITabBarItem(title: "home".localized, image: UIImage(systemName: "house"), tag: 0)
         
         let searchVC = SearchViewController()
-        searchVC.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "magnifyingglass"), tag: 1)
+        searchVC.tabBarItem = UITabBarItem(title: "search".localized, image: UIImage(systemName: "magnifyingglass"), tag: 1)
                 
         self.setViewControllers([homeVC, searchVC], animated: true)
     }
