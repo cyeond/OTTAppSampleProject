@@ -251,8 +251,8 @@ class HomeViewController: UIViewController {
     
     private func bind() {
         viewModel.tvResultsRelay
-            .asDriver()
-            .drive(with: self) { weakSelf, results in
+            .asSignal()
+            .emit(with: self) { weakSelf, results in
                 guard var snapshot = weakSelf.tvDataSnapshot, results.count == 5 else { return }
                 
                 let bannerItems = results[0].results.map { Item.banner(Content(type: .tv, data: $0)) }
@@ -274,8 +274,8 @@ class HomeViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.movieResultsRelay
-            .asDriver()
-            .drive(with: self) { weakSelf, results in
+            .asSignal()
+            .emit(with: self) { weakSelf, results in
                 guard var snapshot = weakSelf.movieDataSnapshot, results.count == 5 else { return }
                 
                 let bannerItems = results[0].results.map { Item.banner(Content(type: .movie, data: $0)) }
