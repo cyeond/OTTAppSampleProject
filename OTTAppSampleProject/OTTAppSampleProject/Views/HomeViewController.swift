@@ -311,23 +311,23 @@ class HomeViewController: UIViewController {
             .disposed(by: disposeBag)
         
         refreshControl.rx.controlEvent(.valueChanged)
-            .withUnretained(self)
-            .bind { weakSelf, _ in
+            .asSignal()
+            .emit(with: self) { weakSelf, _ in
                 weakSelf.startRefreshing()
             }
             .disposed(by: disposeBag)
         
-        contentNavigationView.contentTypeChangedRelay.asObservable()
-            .withUnretained(self)
-            .bind { weakSelf, type in
+        contentNavigationView.contentTypeChangedRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, type in
                 weakSelf.viewModel.currentContentType = type
                 weakSelf.startRefreshing()
             }
             .disposed(by: disposeBag)
         
-        errorCoverView.refreshButtonTappedRelay.asObservable()
-            .withUnretained(self)
-            .bind { weakSelf, _ in
+        errorCoverView.refreshButtonTappedRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, _ in
                 weakSelf.startRefreshing()
             }
             .disposed(by: disposeBag)
