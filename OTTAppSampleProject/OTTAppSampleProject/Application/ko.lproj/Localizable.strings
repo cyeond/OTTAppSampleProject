@@ -8,6 +8,8 @@
 
 "home" = "홈";
 "search" = "검색";
+"tv_content_title" = "TV";
+"movie_content_title" = "영화";
 "on_the_air" = "실시간 방영 중";
 "top_trending_20" = "인기 TOP 20";
 "top_rated_contents" = "평점이 높은 콘텐츠";
@@ -18,3 +20,4 @@
 "load_failure_label_text" = "페이지를 불러오지 못했습니다";
 "reload" = "새로고침";
 "play_button_title" = "▶︎   재생하기";
+"search_bar_placeholder" = "제목, 장르, 배우로 검색해보세요";

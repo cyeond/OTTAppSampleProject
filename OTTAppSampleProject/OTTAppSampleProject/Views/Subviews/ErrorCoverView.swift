@@ -8,9 +8,10 @@
 import UIKit
 import SnapKit
 import RxSwift
+import RxRelay
 
 class ErrorCoverView: UIView {
-    let refreshButtonTappedSubject = PublishSubject<Void>()
+    let refreshButtonTappedRelay = PublishRelay<Void>()
     private let errorLabel = UILabel()
     private let refreshButton = UIButton()
     private let disposeBag = DisposeBag()
@@ -61,7 +62,7 @@ class ErrorCoverView: UIView {
         refreshButton.rx.tap
             .withUnretained(self)
             .bind { weakSelf, _ in
-                weakSelf.refreshButtonTappedSubject.onNext(())
+                weakSelf.refreshButtonTappedRelay.accept(())
             }
             .disposed(by: disposeBag)
     }

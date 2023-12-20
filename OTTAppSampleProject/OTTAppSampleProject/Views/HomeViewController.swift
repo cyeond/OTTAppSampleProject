@@ -317,7 +317,7 @@ class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        contentNavigationView.contentTypeChangedSubject.asObservable()
+        contentNavigationView.contentTypeChangedRelay.asObservable()
             .withUnretained(self)
             .bind { weakSelf, type in
                 weakSelf.viewModel.currentContentType = type
@@ -325,14 +325,14 @@ class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        errorCoverView.refreshButtonTappedSubject.asObservable()
+        errorCoverView.refreshButtonTappedRelay.asObservable()
             .withUnretained(self)
             .bind { weakSelf, _ in
                 weakSelf.startRefreshing()
             }
             .disposed(by: disposeBag)
         
-        contentNavigationView.contentTypeChangedSubject.onNext(.tv)
+        contentNavigationView.contentTypeChangedRelay.accept(.tv)
     }
     
     private func startRefreshing() {

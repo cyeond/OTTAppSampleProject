@@ -8,6 +8,8 @@
 
 "home" = "Home";
 "search" = "Search";
+"tv_content_title" = "TV";
+"movie_content_title" = "MOVIE";
 "on_the_air" = "On The Air";
 "top_trending_20" = "Top Trending 20";
 "top_rated_contents" = "Top Rated Contents";
@@ -18,3 +20,4 @@
 "load_failure_label_text" = "Failed to load";
 "reload" = "Reload";
 "play_button_title" = "▶︎   PLAY";
+"search_bar_placeholder" = "Search by title, genre, or actor";

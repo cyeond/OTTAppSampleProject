@@ -8,9 +8,10 @@
 import UIKit
 import RxSwift
 import SnapKit
+import RxRelay
 
 class ContentNavigationView: UIView {
-    let contentTypeChangedSubject = PublishSubject<ContentType>()
+    let contentTypeChangedRelay = PublishRelay<ContentType>()
     private let contentsButtonStackView = UIStackView()
     private let tvContentButton = UIButton()
     private let movieContentButton = UIButton()
@@ -44,12 +45,12 @@ class ContentNavigationView: UIView {
         
         tvContentButton.addSubview(underlineView)
         
-        tvContentButton.setTitle("TV", for: .normal)
+        tvContentButton.setTitle("tv_content_title".localized, for: .normal)
         tvContentButton.setTitleColor(.white, for: .normal)
         tvContentButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         tvContentButton.tag = 1
         
-        movieContentButton.setTitle("MOVIE", for: .normal)
+        movieContentButton.setTitle("movie_content_title".localized, for: .normal)
         movieContentButton.setTitleColor(.white, for: .normal)
         movieContentButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         movieContentButton.tag = 2
@@ -73,7 +74,7 @@ class ContentNavigationView: UIView {
         tvContentButton.rx.tap
             .withUnretained(self)
             .bind { weakSelf, _ in
-                weakSelf.contentTypeChangedSubject.onNext(.tv)
+                weakSelf.contentTypeChangedRelay.accept(.tv)
                 weakSelf.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width/4 - 25)
             }
             .disposed(by: disposeBag)
@@ -81,7 +82,7 @@ class ContentNavigationView: UIView {
         movieContentButton.rx.tap
             .withUnretained(self)
             .bind { weakSelf, _ in
-                weakSelf.contentTypeChangedSubject.onNext(.movie)
+                weakSelf.contentTypeChangedRelay.accept(.movie)
                 weakSelf.underlineViewConstraint?.update(inset: self.contentsButtonStackView.frame.width*3/4 - 25)
             }
             .disposed(by: disposeBag)
