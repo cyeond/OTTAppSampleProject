@@ -18,6 +18,7 @@ class HomeViewController: UIViewController {
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .init())
     private let refreshControl = UIRefreshControl()
     private let blackCoverView = UIView()
+    private let errorCoverView = ErrorCoverView()
     private let viewModel = HomeViewModel()
     private let disposeBag = DisposeBag()
     
@@ -35,8 +36,10 @@ class HomeViewController: UIViewController {
         view.addSubview(contentNavigationView)
         view.addSubview(collectionView)
         view.addSubview(blackCoverView)
+        view.addSubview(errorCoverView)
         
         blackCoverView.backgroundColor = .black
+        errorCoverView.isHidden = true
         refreshControl.tintColor = .clear
         
         contentNavigationView.snp.makeConstraints {
@@ -51,6 +54,10 @@ class HomeViewController: UIViewController {
         }
         
         blackCoverView.snp.makeConstraints {
+            $0.edges.equalTo(collectionView.snp.edges)
+        }
+        
+        errorCoverView.snp.makeConstraints {
             $0.edges.equalTo(collectionView.snp.edges)
         }
     }
@@ -296,24 +303,42 @@ class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        contentNavigationView.contentTypeChangedSubject.asObservable()
-            .withUnretained(self)
-            .bind { weakSelf, type in
-                weakSelf.blackCoverView.isHidden = false
-                weakSelf.viewModel.currentContentType = type
-                weakSelf.viewModel.getResultsData()
+        viewModel.apiErrorRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, _ in
+                weakSelf.endRefreshingWithError()
             }
             .disposed(by: disposeBag)
         
         refreshControl.rx.controlEvent(.valueChanged)
             .withUnretained(self)
             .bind { weakSelf, _ in
-                weakSelf.blackCoverView.isHidden = false
-                weakSelf.viewModel.getResultsData()
+                weakSelf.startRefreshing()
+            }
+            .disposed(by: disposeBag)
+        
+        contentNavigationView.contentTypeChangedSubject.asObservable()
+            .withUnretained(self)
+            .bind { weakSelf, type in
+                weakSelf.viewModel.currentContentType = type
+                weakSelf.startRefreshing()
+            }
+            .disposed(by: disposeBag)
+        
+        errorCoverView.refreshButtonTappedSubject.asObservable()
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.startRefreshing()
             }
             .disposed(by: disposeBag)
         
         contentNavigationView.contentTypeChangedSubject.onNext(.tv)
+    }
+    
+    private func startRefreshing() {
+        errorCoverView.isHidden = true
+        blackCoverView.isHidden = false
+        viewModel.getResultsData()
     }
     
     private func endRefreshing() {
@@ -323,6 +348,16 @@ class HomeViewController: UIViewController {
             .withUnretained(self)
             .bind { weakSelf, _ in
                 weakSelf.blackCoverView.isHidden = true
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func endRefreshingWithError() {
+        refreshControl.endRefreshing()
+        Observable.just(()).delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.errorCoverView.isHidden = false
             }
             .disposed(by: disposeBag)
     }
