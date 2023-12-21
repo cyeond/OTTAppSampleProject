@@ -8,6 +8,11 @@
 import UIKit
 import SnapKit
 
+enum HeaderType {
+    case large
+    case small
+}
+
 class CellHeaderView: UICollectionReusableView {
     static let identifier = "CellHeaderView"
     private let titleLabel = UILabel()
@@ -34,7 +39,14 @@ class CellHeaderView: UICollectionReusableView {
         titleLabel.textAlignment = .left
     }
     
-    func configure(title: String) {
+    func configure(title: String, type: HeaderType = .large) {
         titleLabel.text = title
+        switch type {
+        case .small:
+            titleLabel.font = .boldSystemFont(ofSize: 14.0)
+            titleLabel.textColor = UIColor(named: "customMediumGray")
+        default:
+            break
+        }
     }
 }

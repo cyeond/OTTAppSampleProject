@@ -32,6 +32,6 @@ struct ContentData: Codable, Hashable {
 }
 
 struct Content: Hashable {
-    var type: ContentType
+    var type: ContentType?
     var data: ContentData
 }

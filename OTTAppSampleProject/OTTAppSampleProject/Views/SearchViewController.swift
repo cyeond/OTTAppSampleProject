@@ -9,19 +9,36 @@ import UIKit
 import RxSwift
 
 class SearchViewController: UIViewController {
+    private let viewModel = SearchViewModel()
     private let searchBar = UISearchBar()
+    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .init())
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>?
+    private var suggestionCollectionLayout: UICollectionViewCompositionalLayout?
+    private var suggestionDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
+    private var searchHistoryCollectionLayout: UICollectionViewCompositionalLayout?
+    private var searchHistoryDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUI()
+        setCollectionView()
+        setDataSource()
         bind()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.searchTextField.resignFirstResponder()
     }
     
     private func setUI() {
         view.backgroundColor = .black
         view.addSubview(searchBar)
+        view.addSubview(collectionView)
         
         searchBar.barTintColor = .clear
         searchBar.searchTextField.backgroundColor = UIColor(named: "customDarkGray")
@@ -43,6 +60,94 @@ class SearchViewController: UIViewController {
             $0.horizontalEdges.equalToSuperview()
             $0.top.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        collectionView.snp.makeConstraints {
+            $0.horizontalEdges.bottom.equalToSuperview()
+            $0.top.equalTo(searchBar.snp.bottom)
+        }
+    }
+    
+    private func setCollectionView() {
+        collectionView.backgroundColor = .black
+        collectionView.register(ListWithImageAndNumberCell.self, forCellWithReuseIdentifier: ListWithImageAndNumberCell.identifier)
+        collectionView.register(CellHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CellHeaderView.identifier)
+        setSuggestionCollectionViewLayout()
+    }
+    
+    private func setSuggestionCollectionViewLayout() {
+        if let suggestionCollectionLayout = self.suggestionCollectionLayout {
+            collectionView.setCollectionViewLayout(suggestionCollectionLayout, animated: true)
+        } else {
+            collectionView.setCollectionViewLayout(createSuggestionCollectionViewLayout(), animated: true)
+        }
+    }
+    
+    private func setSearchHistoryCollectionViewLayout() {
+        
+    }
+    
+    private func createSuggestionCollectionViewLayout() -> UICollectionViewCompositionalLayout {
+        let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, environment in
+            switch self?.dataSource?.snapshot().sectionIdentifiers[sectionIndex].id {
+            default:
+                return self?.createRisingContentsSection()
+            }
+        }, configuration: layoutConfig)
+        
+        suggestionCollectionLayout = layout
+        return layout
+    }
+    
+    private func createRisingContentsSection() -> NSCollectionLayoutSection {
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
+        header.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 10.0)
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = .init(top: 0, leading: 0, bottom: 10.0, trailing: 0)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.6), heightDimension: .absolute(380.0))
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitem: item, count: 3)
+        group.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .paging
+        section.boundarySupplementaryItems = [header]
+        
+        return section
+    }
+    
+    private func setDataSource() {
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+            switch itemIdentifier {
+            case .listWithImageAndNumber(let content):
+                guard let listWithImageAndNumberCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageAndNumberCell.identifier, for: indexPath) as? ListWithImageAndNumberCell else { return UICollectionViewCell()}
+                listWithImageAndNumberCell.configure(data: content.data, number: indexPath.row, numberPosition: .middle)
+                return listWithImageAndNumberCell
+            default:
+                return nil
+            }
+        })
+        
+        dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+            switch self.dataSource?.snapshot().sectionIdentifiers[indexPath.section].id {
+            case "Suggestion1":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
+                cellHeaderView.configure(title: "rising_contents".localized)
+                return cellHeaderView
+            default:
+                return nil
+            }
+        }
+        
+        var suggestionDataSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        
+        suggestionDataSnapshot.appendSections([Section(id: "Suggestion1")])
+        
+        self.dataSource?.apply(suggestionDataSnapshot)
+        self.suggestionDataSnapshot = suggestionDataSnapshot
     }
     
     private func bind() {
@@ -66,6 +171,28 @@ class SearchViewController: UIViewController {
                 weakSelf.cancelEditing()
             }
             .disposed(by: disposeBag)
+     
+        viewModel.suggestionResultRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, data in
+                guard var suggestionDataSnapshot = weakSelf.suggestionDataSnapshot else { return }
+                
+                let suggestionItems = data.results.prefix(15).map { Item.listWithImageAndNumber(Content(type: .none, data: $0)) }
+                
+                suggestionDataSnapshot.appendItems(suggestionItems, toSection: Section(id: "Suggestion1"))
+                
+                weakSelf.dataSource?.apply(suggestionDataSnapshot)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.apiErrorRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, data in
+                
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.getSuggestionData()
     }
     
     private func startEditing() {

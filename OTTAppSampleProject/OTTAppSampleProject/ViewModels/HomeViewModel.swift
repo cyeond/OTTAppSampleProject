@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxRelay
 
-class HomeViewModel: ObservableObject {
+class HomeViewModel {
     var tvResultsRelay = PublishRelay<[APIResult]>()
     var movieResultsRelay = PublishRelay<[APIResult]>()
     var apiErrorRelay = PublishRelay<Void>()

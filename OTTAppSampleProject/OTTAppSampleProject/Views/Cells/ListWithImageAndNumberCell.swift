@@ -9,10 +9,18 @@ import UIKit
 import SnapKit
 import Kingfisher
 
+enum NumberPosition {
+    case top
+    case middle
+    case bottom
+}
+
 class ListWithImageAndNumberCell: UICollectionViewCell {
     static let identifier = "ListWithImageAndNumberCell"
     private let numberLabel = UILabel()
     private let listImageView = UIImageView()
+    private let numberLabelHeightRatio: CGFloat = 0.4
+    private var numberLabelConstraint: Constraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,8 +37,10 @@ class ListWithImageAndNumberCell: UICollectionViewCell {
         addSubview(listImageView)
         
         numberLabel.snp.makeConstraints {
-            $0.leading.bottom.equalToSuperview()
+            $0.leading.equalToSuperview()
             $0.width.equalToSuperview().multipliedBy(0.35)
+            $0.height.equalToSuperview().multipliedBy(numberLabelHeightRatio)
+            numberLabelConstraint = $0.bottom.equalToSuperview().constraint
         }
         
         listImageView.snp.makeConstraints {
@@ -50,7 +60,7 @@ class ListWithImageAndNumberCell: UICollectionViewCell {
         listImageView.layer.cornerRadius = 5.0
     }
     
-    func configure(data: ContentData, number: Int) {
+    func configure(data: ContentData, number: Int, numberPosition: NumberPosition = .bottom) {
         let attributedText = NSAttributedString(
             string: String(number+1),
             attributes: [
@@ -60,7 +70,17 @@ class ListWithImageAndNumberCell: UICollectionViewCell {
                 NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Bold", size: 45)!
             ]
         )
+        
         numberLabel.attributedText = attributedText
         listImageView.kf.setImage(with: URL(string: data.previewImageUrl))
+        
+        switch numberPosition {
+        case .top:
+            numberLabelConstraint?.update(inset: self.frame.height*(1.0-numberLabelHeightRatio))
+        case .middle:
+            numberLabelConstraint?.update(inset: self.frame.height*(1.0-numberLabelHeightRatio)/2.0)
+        default:
+            break
+        }
     }
 }
