@@ -34,8 +34,6 @@ class CellHeaderView: UICollectionReusableView {
             $0.edges.equalToSuperview()
         }
         
-        titleLabel.font = .systemFont(ofSize: 20.0, weight: .heavy)
-        titleLabel.textColor = .white
         titleLabel.textAlignment = .left
     }
     
@@ -45,8 +43,9 @@ class CellHeaderView: UICollectionReusableView {
         case .small:
             titleLabel.font = .systemFont(ofSize: 13.0, weight: .heavy)
             titleLabel.textColor = UIColor(named: "customLightGray")
-        default:
-            break
+        case .large:
+            titleLabel.font = .systemFont(ofSize: 20.0, weight: .heavy)
+            titleLabel.textColor = .white
         }
     }
 }

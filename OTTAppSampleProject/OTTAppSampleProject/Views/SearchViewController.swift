@@ -17,6 +17,8 @@ class SearchViewController: UIViewController {
     private var suggestionDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     private var searchHistoryCollectionLayout: UICollectionViewCompositionalLayout?
     private var searchHistoryDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
+    private var searchResultCollectionLayout: UICollectionViewCompositionalLayout?
+    private var searchResultDataSnapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -71,6 +73,7 @@ class SearchViewController: UIViewController {
         collectionView.backgroundColor = .black
         collectionView.register(ListWithImageAndNumberCell.self, forCellWithReuseIdentifier: ListWithImageAndNumberCell.identifier)
         collectionView.register(ListWithTextAndButtonCell.self, forCellWithReuseIdentifier: ListWithTextAndButtonCell.identifier)
+        collectionView.register(ListWithImageCell.self, forCellWithReuseIdentifier: ListWithImageCell.identifier)
         collectionView.register(CellHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CellHeaderView.identifier)
         setSuggestionCollectionViewLayout()
     }
@@ -91,6 +94,14 @@ class SearchViewController: UIViewController {
         }
     }
     
+    private func setSearchResultCollectionViewLayout() {
+        if let searchResultCollectionLayout = self.searchResultCollectionLayout {
+            collectionView.setCollectionViewLayout(searchResultCollectionLayout, animated: false)
+        } else {
+            collectionView.setCollectionViewLayout(createSearchResultCollectionViewLayout(), animated: false)
+        }
+    }
+    
     private func createSuggestionCollectionViewLayout() -> UICollectionViewCompositionalLayout {
         let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, environment in
@@ -108,13 +119,21 @@ class SearchViewController: UIViewController {
     private func createSearchHistoryCollectionViewLayout() -> UICollectionViewCompositionalLayout {
         let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, environment in
-            switch self?.dataSource?.snapshot().sectionIdentifiers[sectionIndex].id {
-            default:
-                return self?.createSearchHistorySection()
-            }
+            return self?.createSearchHistorySection()
         }, configuration: layoutConfig)
         
         searchHistoryCollectionLayout = layout
+        
+        return layout
+    }
+    
+    private func createSearchResultCollectionViewLayout() -> UICollectionViewCompositionalLayout {
+        let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, environment in
+            return self?.createSearchResultSection()
+        }, configuration: layoutConfig)
+        
+        searchResultCollectionLayout = layout
         
         return layout
     }
@@ -158,6 +177,21 @@ class SearchViewController: UIViewController {
         return section
     }
     
+    private func createSearchResultSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(150.0))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
+        group.contentInsets = .init(top: 10.0, leading: 0, bottom: 0, trailing: 10.0)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = .init(top: 10.0, leading: 0, bottom: 20.0, trailing: 0)
+        
+        return section
+    }
+    
     private func setDataSource() {
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             switch itemIdentifier {
@@ -169,6 +203,10 @@ class SearchViewController: UIViewController {
                 guard let listWithTextAndButtonCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithTextAndButtonCell.identifier, for: indexPath) as? ListWithTextAndButtonCell else { return UICollectionViewCell()}
                 listWithTextAndButtonCell.configure(text: text)
                 return listWithTextAndButtonCell
+            case .listWithImage(let content):
+                guard let listWithImageCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageCell.identifier, for: indexPath) as? ListWithImageCell else { return UICollectionViewCell()}
+                listWithImageCell.configure(data: content.data)
+                return listWithImageCell
             default:
                 return UICollectionViewCell()
             }
@@ -184,6 +222,9 @@ class SearchViewController: UIViewController {
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
                 cellHeaderView.configure(title: "recent_searches".localized, type: .small)
                 return cellHeaderView
+            case "SearchResult":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
+                return cellHeaderView
             default:
                 return nil
             }
@@ -191,13 +232,16 @@ class SearchViewController: UIViewController {
         
         var suggestionDataSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         var searchHistoryDataSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        var searchResultDataSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
         suggestionDataSnapshot.appendSections([Section(id: "Suggestion1")])
         searchHistoryDataSnapshot.appendSections([Section(id: "SearchHistory")])
+        searchResultDataSnapshot.appendSections([Section(id: "SearchResult")])
         
         self.dataSource?.apply(suggestionDataSnapshot)
         self.suggestionDataSnapshot = suggestionDataSnapshot
         self.searchHistoryDataSnapshot = searchHistoryDataSnapshot
+        self.searchResultDataSnapshot = searchResultDataSnapshot
     }
     
     private func bind() {
@@ -239,7 +283,7 @@ class SearchViewController: UIViewController {
         viewModel.searchResultRelay
             .asSignal()
             .emit(with: self) { weakSelf, data in
-                
+                weakSelf.showSearchResultLayout(contents: data.results)
             }
             .disposed(by: disposeBag)
         
@@ -285,10 +329,21 @@ class SearchViewController: UIViewController {
         if var snapshot = searchHistoryDataSnapshot {
             let searchHistoryItems = viewModel.testSearchHistory.map { Item.listWithTextAndButton($0) }
             
-            snapshot.appendItems(searchHistoryItems)
+            snapshot.appendItems(searchHistoryItems, toSection: Section(id: "SearchHistory"))
 
             dataSource?.apply(snapshot)
         }
         setSearchHistoryCollectionViewLayout()
+    }
+    
+    private func showSearchResultLayout(contents: [ContentData]) {
+        if var snapshot = searchResultDataSnapshot {
+            let searchResultItems = contents.map { Item.listWithImage(Content(type: .none, data: $0)) }
+            
+            snapshot.appendItems(searchResultItems, toSection: Section(id: "SearchResult"))
+
+            dataSource?.apply(snapshot)
+        }
+        setSearchResultCollectionViewLayout()
     }
 }
