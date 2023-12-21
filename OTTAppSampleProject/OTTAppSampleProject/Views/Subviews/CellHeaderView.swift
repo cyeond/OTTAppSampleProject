@@ -43,8 +43,8 @@ class CellHeaderView: UICollectionReusableView {
         titleLabel.text = title
         switch type {
         case .small:
-            titleLabel.font = .boldSystemFont(ofSize: 14.0)
-            titleLabel.textColor = UIColor(named: "customMediumGray")
+            titleLabel.font = .systemFont(ofSize: 13.0, weight: .heavy)
+            titleLabel.textColor = UIColor(named: "customLightGray")
         default:
             break
         }

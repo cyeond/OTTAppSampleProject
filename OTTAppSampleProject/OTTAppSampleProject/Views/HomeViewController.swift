@@ -203,6 +203,8 @@ class HomeViewController: UIViewController {
                 guard let listWithImageAndNumberCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageAndNumberCell.identifier, for: indexPath) as? ListWithImageAndNumberCell else { return UICollectionViewCell() }
                 listWithImageAndNumberCell.configure(data: content.data, number: indexPath.row)
                 return listWithImageAndNumberCell
+            default:
+                return UICollectionViewCell()
             }
         })
         
