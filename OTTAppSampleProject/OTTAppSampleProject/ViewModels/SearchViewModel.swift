@@ -10,6 +10,7 @@ import RxRelay
 
 class SearchViewModel {
     var suggestionResultRelay = PublishRelay<APIResult>()
+    var searchResultRelay = PublishRelay<APIResult>()
     var apiErrorRelay = PublishRelay<Void>()
     let testSearchHistory = ["TEST1", "TEST2", "TEST3", "TEST4", "TEST5"]
     
@@ -19,6 +20,21 @@ class SearchViewModel {
         API.getData(type: .weeklyTrending(.none))
             .subscribe(with: self, onNext: { weakSelf, result in
                 weakSelf.suggestionResultRelay.accept(result)
+            }, onError: { weakSelf, error in
+                weakSelf.apiErrorRelay.accept(())
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func getSearchData(text: String) {
+        guard let encodedText = text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            apiErrorRelay.accept(())
+            return
+        }
+        
+        API.getData(type: .keywordSearching(encodedText))
+            .subscribe(with: self, onNext: { weakSelf, result in
+                weakSelf.searchResultRelay.accept(result)
             }, onError: { weakSelf, error in
                 weakSelf.apiErrorRelay.accept(())
             })

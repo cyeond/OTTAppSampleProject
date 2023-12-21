@@ -236,6 +236,13 @@ class SearchViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        viewModel.searchResultRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, data in
+                
+            }
+            .disposed(by: disposeBag)
+        
         viewModel.apiErrorRelay
             .asSignal()
             .emit(with: self) { weakSelf, data in
@@ -260,8 +267,11 @@ class SearchViewController: UIViewController {
     }
     
     private func search() {
+        guard let text = searchBar.text else { return }
+        
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.searchTextField.resignFirstResponder()
+        viewModel.getSearchData(text: text)
     }
     
     private func showSuggestionLayout() {

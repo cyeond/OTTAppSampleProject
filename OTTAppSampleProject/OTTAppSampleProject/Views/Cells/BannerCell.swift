@@ -78,8 +78,8 @@ class BannerCell: UICollectionViewCell {
     }
     
     func configure(data: ContentData) {
-        let rating = Double(Int(data.voteAverage*10))/10.0
-        let originalLanguage = " ∙ " + data.originalLanguage
+        let rating = Double(Int(data.rating*10))/10.0
+        let originalLanguage = data.originalLanguage != nil ? " ∙ " + data.originalLanguage! : ""
         let releaseDate = data.releaseDate != nil ? " ∙ " + data.releaseDate! : ""
         
         self.titleLabel.text = (data.title != nil) ? data.title : data.name

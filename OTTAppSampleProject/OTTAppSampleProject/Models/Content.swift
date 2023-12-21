@@ -11,12 +11,19 @@ enum ContentType: String {
 }
 
 struct ContentData: Codable, Hashable {
-    let id, voteCount: Int
-    let originalLanguage, posterPath: String
-    let originalTitle, title, originalName, name, releaseDate: String?
-    let popularity, voteAverage: Double
+    let id: Int
+    let voteCount: Int?
+    let originalTitle, title, originalName, name, originalLanguage, releaseDate, posterPath: String?
+    let popularity, voteAverage: Double?
     var previewImageUrl: String {
+        guard let posterPath = posterPath else { return Constants.PLACEHOLDER_IMAGE_URL }
         return Constants.API_IMAGE_URL_PREFIX + posterPath
+    }
+    var rating: Double {
+        return voteAverage ?? 0.0
+    }
+    var ratingCount: Int {
+        return voteCount ?? 0
     }
 
     enum CodingKeys: String, CodingKey {
