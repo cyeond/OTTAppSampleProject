@@ -14,7 +14,6 @@ class SearchViewModel {
     var apiErrorRelay = PublishRelay<Void>()
     let searchHistoryCellTappedRelay = PublishRelay<String>()
     let deleteSearchHistoryCellRelay = PublishRelay<(String, Int)>()
-    var testSearchHistory = ["TEST1", "TEST2", "TEST3", "TEST4", "TEST5"]
     
     private let disposeBag = DisposeBag()
     

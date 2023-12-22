@@ -343,6 +343,7 @@ class SearchViewController: UIViewController {
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.searchTextField.resignFirstResponder()
         viewModel.getSearchData(text: text)
+        Storage.insertToArray(key: "searchHistory", value: text)
     }
     
     private func showSuggestionLayout() {
@@ -354,7 +355,7 @@ class SearchViewController: UIViewController {
     
     private func showSearchHistoryLayout() {
         if var snapshot = searchHistoryDataSnapshot {
-            let searchHistoryItems = viewModel.testSearchHistory.map { Item.listWithTextAndButton($0) }
+            let searchHistoryItems = Storage.searchHistory.map { Item.listWithTextAndButton($0) }
             
             snapshot.appendItems(searchHistoryItems, toSection: Section(id: "SearchHistory"))
 
