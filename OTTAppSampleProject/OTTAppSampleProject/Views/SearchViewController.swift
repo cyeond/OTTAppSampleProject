@@ -149,7 +149,7 @@ class SearchViewController: UIViewController {
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.6), heightDimension: .absolute(380.0))
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitem: item, count: 3)
-        group.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
+        group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 10.0)
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .paging
@@ -202,6 +202,18 @@ class SearchViewController: UIViewController {
             case .listWithTextAndButton(let text):
                 guard let listWithTextAndButtonCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithTextAndButtonCell.identifier, for: indexPath) as? ListWithTextAndButtonCell else { return UICollectionViewCell()}
                 listWithTextAndButtonCell.configure(text: text)
+                listWithTextAndButtonCell.cellAreaButtonWithText.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.searchHistoryCellTappedRelay.accept(text)
+                    }
+                    .disposed(by: listWithTextAndButtonCell.disposeBag)
+                listWithTextAndButtonCell.rightButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.deleteSearchHistoryCellRelay.accept((text, indexPath.row))
+                    }
+                    .disposed(by: listWithTextAndButtonCell.disposeBag)
                 return listWithTextAndButtonCell
             case .listWithImage(let content):
                 guard let listWithImageCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageCell.identifier, for: indexPath) as? ListWithImageCell else { return UICollectionViewCell()}
@@ -289,7 +301,22 @@ class SearchViewController: UIViewController {
         
         viewModel.apiErrorRelay
             .asSignal()
-            .emit(with: self) { weakSelf, data in
+            .emit(with: self) { weakSelf, _ in
+                
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.searchHistoryCellTappedRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, text in
+                weakSelf.searchBar.text = text
+                weakSelf.search()
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.deleteSearchHistoryCellRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, value in
                 
             }
             .disposed(by: disposeBag)
