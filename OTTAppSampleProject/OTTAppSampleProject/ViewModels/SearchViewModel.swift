@@ -13,7 +13,7 @@ class SearchViewModel {
     var searchResultRelay = PublishRelay<APIResult>()
     var apiErrorRelay = PublishRelay<Void>()
     let searchHistoryCellTappedRelay = PublishRelay<String>()
-    let deleteSearchHistoryCellRelay = PublishRelay<(String, Int)>()
+    let deleteSearchHistoryCellRelay = PublishRelay<String>()
     
     private let disposeBag = DisposeBag()
     

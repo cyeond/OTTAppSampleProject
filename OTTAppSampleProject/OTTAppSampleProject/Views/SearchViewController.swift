@@ -211,7 +211,7 @@ class SearchViewController: UIViewController {
                 listWithTextAndButtonCell.rightButton.rx.tap
                     .asSignal()
                     .emit(with: self) { weakSelf, _ in
-                        weakSelf.viewModel.deleteSearchHistoryCellRelay.accept((text, indexPath.row))
+                        weakSelf.viewModel.deleteSearchHistoryCellRelay.accept(text)
                     }
                     .disposed(by: listWithTextAndButtonCell.disposeBag)
                 return listWithTextAndButtonCell
@@ -316,8 +316,9 @@ class SearchViewController: UIViewController {
         
         viewModel.deleteSearchHistoryCellRelay
             .asSignal()
-            .emit(with: self) { weakSelf, value in
-                
+            .emit(with: self) { weakSelf, text in
+                Storage.deleteToArray(key: "searchHistory", value: text)
+                weakSelf.reloadSearchHistoryData()
             }
             .disposed(by: disposeBag)
         
@@ -354,13 +355,7 @@ class SearchViewController: UIViewController {
     }
     
     private func showSearchHistoryLayout() {
-        if var snapshot = searchHistoryDataSnapshot {
-            let searchHistoryItems = Storage.searchHistory.map { Item.listWithTextAndButton($0) }
-            
-            snapshot.appendItems(searchHistoryItems, toSection: Section(id: "SearchHistory"))
-
-            dataSource?.apply(snapshot)
-        }
+        reloadSearchHistoryData()
         setSearchHistoryCollectionViewLayout()
     }
     
@@ -373,5 +368,15 @@ class SearchViewController: UIViewController {
             dataSource?.apply(snapshot)
         }
         setSearchResultCollectionViewLayout()
+    }
+    
+    private func reloadSearchHistoryData() {
+        if var snapshot = searchHistoryDataSnapshot {
+            let searchHistoryItems = Storage.searchHistory.map { Item.listWithTextAndButton($0) }
+            
+            snapshot.appendItems(searchHistoryItems, toSection: Section(id: "SearchHistory"))
+
+            dataSource?.apply(snapshot)
+        }
     }
 }
