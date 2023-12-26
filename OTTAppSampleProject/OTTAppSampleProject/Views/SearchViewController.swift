@@ -47,7 +47,7 @@ class SearchViewController: UIViewController {
         searchBar.searchTextField.font = .boldSystemFont(ofSize: 15.0)
         searchBar.searchTextField.textColor = .white
         searchBar.searchTextField.tintColor = .white
-        searchBar.searchTextField.attributedPlaceholder = NSAttributedString.init(string: "search_bar_placeholder".localized, attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "customLightGray") ?? UIColor.lightGray])
+        searchBar.searchTextField.attributedPlaceholder = NSAttributedString.init(string: "search_bar_placeholder".localized, attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "customLightGray") ?? UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15.0)])
         searchBar.searchTextField.leftView?.tintColor = UIColor(named: "customLightGray")
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .white
         
@@ -58,14 +58,14 @@ class SearchViewController: UIViewController {
         }
         
         searchBar.snp.makeConstraints {
-            $0.height.equalTo(30.0)
+            $0.height.equalTo(36.0)
             $0.horizontalEdges.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(15.0)
         }
         
         collectionView.snp.makeConstraints {
             $0.horizontalEdges.bottom.equalToSuperview()
-            $0.top.equalTo(searchBar.snp.bottom)
+            $0.top.equalTo(searchBar.snp.bottom).inset(-5.0)
         }
     }
     
