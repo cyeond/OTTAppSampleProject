@@ -245,6 +245,12 @@ class SearchViewController: UIViewController {
             case .buttonWithText(let text):
                 guard let buttonWithTextCell = collectionView.dequeueReusableCell(withReuseIdentifier: ButtonWithTextCell.identifier, for: indexPath) as? ButtonWithTextCell else { return UICollectionViewCell() }
                 buttonWithTextCell.configure(text: text)
+                buttonWithTextCell.cellButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.suggestedKeywordTappedRelay.accept(text)
+                    }
+                    .disposed(by: buttonWithTextCell.disposeBag)
                 return buttonWithTextCell
             default:
                 return UICollectionViewCell()
@@ -352,6 +358,14 @@ class SearchViewController: UIViewController {
             .emit(with: self) { weakSelf, text in
                 Storage.deleteToArray(key: "searchHistory", value: text)
                 weakSelf.reloadSearchHistoryData()
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.suggestedKeywordTappedRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, text in
+                weakSelf.searchBar.text = text
+                weakSelf.search()
             }
             .disposed(by: disposeBag)
         
