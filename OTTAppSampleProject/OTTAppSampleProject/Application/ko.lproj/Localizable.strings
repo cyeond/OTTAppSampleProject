@@ -23,3 +23,14 @@
 "search_bar_placeholder" = "제목, 장르, 배우로 검색해보세요";
 "rising_contents" = "지금 뜨는 콘텐츠";
 "recent_searches" = "최근 검색어";
+"suggested_keywords" = "추천 키워드";
+"entertainmnet" = "예능";
+"documentary" = "다큐멘터리";
+"comedy" = "코미디";
+"fantasy" = "판타지";
+"action" = "액션";
+"romance" = "로맨스";
+"movie" = "영화";
+"drama" = "드라마";
+"animantion" = "애니메이션";
+"thriller" = "스릴러";

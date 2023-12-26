@@ -23,3 +23,14 @@
 "search_bar_placeholder" = "Search by title, genre, or actor";
 "rising_contents" = "Rising Contents";
 "recent_searches" = "Recent Searches";
+"suggested_keywords" = "Suggested Keywords";
+"entertainmnet" = "entertainmnet";
+"documentary" = "documentary";
+"comedy" = "comedy";
+"fantasy" = "fantasy";
+"action" = "action";
+"romance" = "romance";
+"movie" = "movie";
+"drama" = "drama";
+"animantion" = "animantion";
+"thriller" = "thriller";

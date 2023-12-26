@@ -11,4 +11,5 @@ enum Item: Hashable {
     case listWithImageAndTitle(Content)
     case listWithImageAndNumber(Content)
     case listWithTextAndButton(String)
+    case buttonWithText(String)
 }

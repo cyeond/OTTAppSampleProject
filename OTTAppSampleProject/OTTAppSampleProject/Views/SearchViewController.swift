@@ -74,6 +74,7 @@ class SearchViewController: UIViewController {
         collectionView.register(ListWithImageAndNumberCell.self, forCellWithReuseIdentifier: ListWithImageAndNumberCell.identifier)
         collectionView.register(ListWithTextAndButtonCell.self, forCellWithReuseIdentifier: ListWithTextAndButtonCell.identifier)
         collectionView.register(ListWithImageCell.self, forCellWithReuseIdentifier: ListWithImageCell.identifier)
+        collectionView.register(ButtonWithTextCell.self, forCellWithReuseIdentifier: ButtonWithTextCell.identifier)
         collectionView.register(CellHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CellHeaderView.identifier)
         setSuggestionCollectionViewLayout()
     }
@@ -106,7 +107,10 @@ class SearchViewController: UIViewController {
         let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, environment in
             switch self?.dataSource?.snapshot().sectionIdentifiers[sectionIndex].id {
+            case "SuggestedKeywords":
+                return self?.createSuggestedKeywordsSection()
             default:
+                // "RisingContents"
                 return self?.createRisingContentsSection()
             }
         }, configuration: layoutConfig)
@@ -153,6 +157,25 @@ class SearchViewController: UIViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .paging
+        section.boundarySupplementaryItems = [header]
+        
+        return section
+    }
+    
+    private func createSuggestedKeywordsSection() -> NSCollectionLayoutSection {
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
+        header.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 10.0)
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = .init(top: 0, leading: 0, bottom: 10.0, trailing: 10.0)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50.0))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
+        group.contentInsets = .init(top: 0, leading: 10.0, bottom: 0, trailing: 0)
+        
+        let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
         
         return section
@@ -219,6 +242,10 @@ class SearchViewController: UIViewController {
                 guard let listWithImageCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageCell.identifier, for: indexPath) as? ListWithImageCell else { return UICollectionViewCell()}
                 listWithImageCell.configure(data: content.data)
                 return listWithImageCell
+            case .buttonWithText(let text):
+                guard let buttonWithTextCell = collectionView.dequeueReusableCell(withReuseIdentifier: ButtonWithTextCell.identifier, for: indexPath) as? ButtonWithTextCell else { return UICollectionViewCell() }
+                buttonWithTextCell.configure(text: text)
+                return buttonWithTextCell
             default:
                 return UICollectionViewCell()
             }
@@ -226,9 +253,13 @@ class SearchViewController: UIViewController {
         
         dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
             switch self.dataSource?.snapshot().sectionIdentifiers[indexPath.section].id {
-            case "Suggestion1":
+            case "RisingContents":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
                 cellHeaderView.configure(title: "rising_contents".localized)
+                return cellHeaderView
+            case "SuggestedKeywords":
+                guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
+                cellHeaderView.configure(title: "suggested_keywords".localized, type: .small)
                 return cellHeaderView
             case "SearchHistory":
                 guard let cellHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellHeaderView.identifier, for: indexPath) as? CellHeaderView else { return nil }
@@ -246,7 +277,7 @@ class SearchViewController: UIViewController {
         var searchHistoryDataSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         var searchResultDataSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
-        suggestionDataSnapshot.appendSections([Section(id: "Suggestion1")])
+        suggestionDataSnapshot.appendSections([Section(id: "RisingContents"), Section(id: "SuggestedKeywords")])
         searchHistoryDataSnapshot.appendSections([Section(id: "SearchHistory")])
         searchResultDataSnapshot.appendSections([Section(id: "SearchResult")])
         
@@ -284,8 +315,10 @@ class SearchViewController: UIViewController {
                 guard var suggestionDataSnapshot = weakSelf.suggestionDataSnapshot else { return }
                 
                 let suggestionItems = data.results.prefix(15).map { Item.listWithImageAndNumber(Content(type: .none, data: $0)) }
+                let keywordItems = Constants.SUGGESTED_KEYWORDS.map { Item.buttonWithText($0) }
                 
-                suggestionDataSnapshot.appendItems(suggestionItems, toSection: Section(id: "Suggestion1"))
+                suggestionDataSnapshot.appendItems(suggestionItems, toSection: Section(id: "RisingContents"))
+                suggestionDataSnapshot.appendItems(keywordItems, toSection: Section(id: "SuggestedKeywords"))
                 
                 weakSelf.suggestionDataSnapshot = suggestionDataSnapshot
                 weakSelf.dataSource?.apply(suggestionDataSnapshot)
