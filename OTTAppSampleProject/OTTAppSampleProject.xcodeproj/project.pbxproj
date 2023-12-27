@@ -44,6 +44,7 @@
 		78EA428B2B22A3D500E66AD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78EA428A2B22A3D500E66AD9 /* Assets.xcassets */; };
 		78EA428E2B22A3D500E66AD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78EA428C2B22A3D500E66AD9 /* LaunchScreen.storyboard */; };
 		78EA429C2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EA429B2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift */; };
+		78FA42232B3C20EF00C6A5DB /* ContentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA42222B3C20EF00C6A5DB /* ContentDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		78EA428F2B22A3D500E66AD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78EA42992B22A40E00E66AD9 /* OTTAppSampleProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTTAppSampleProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78EA429B2B22A40E00E66AD9 /* OTTAppSampleProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTTAppSampleProjectTests.swift; sourceTree = "<group>"; };
+		78FA42222B3C20EF00C6A5DB /* ContentDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				78A68E102B315DA7003FAFEB /* TabBarController.swift */,
 				78EA42852B22A3D400E66AD9 /* HomeViewController.swift */,
 				78A68E122B3163AE003FAFEB /* SearchViewController.swift */,
+				78FA42222B3C20EF00C6A5DB /* ContentDetailViewController.swift */,
 				788C55D72B282D88008F74CB /* Subviews */,
 				788C55D82B282D8F008F74CB /* Cells */,
 			);
@@ -377,6 +380,7 @@
 				78A68E112B315DA7003FAFEB /* TabBarController.swift in Sources */,
 				78017B102B2954D4001D4F96 /* ListWithImageCell.swift in Sources */,
 				7802B3792B3ABD8B00544D60 /* ButtonWithTextCell.swift in Sources */,
+				78FA42232B3C20EF00C6A5DB /* ContentDetailViewController.swift in Sources */,
 				788C55D12B282C55008F74CB /* Section.swift in Sources */,
 				78EA42822B22A3D400E66AD9 /* AppDelegate.swift in Sources */,
 				788C55E02B283C19008F74CB /* BannerCell.swift in Sources */,

@@ -22,12 +22,18 @@ class TabBarController: UITabBarController {
     }
     
     private func setViewControllers() {
-        let homeVC = HomeViewController()
-        homeVC.tabBarItem = UITabBarItem(title: "home".localized, image: UIImage(systemName: "house"), tag: 0)
+        let homeNavController = UINavigationController()
+        let homeViewController = HomeViewController()
+        homeViewController.tabBarItem = UITabBarItem(title: "home".localized, image: UIImage(systemName: "house"), tag: 0)
+        homeNavController.setViewControllers([homeViewController], animated: true)
+        homeNavController.setNavigationBarHidden(true, animated: false)
         
-        let searchVC = SearchViewController()
-        searchVC.tabBarItem = UITabBarItem(title: "search".localized, image: UIImage(systemName: "magnifyingglass"), tag: 1)
+        let searchNavController = UINavigationController()
+        let searchViewController = SearchViewController()
+        searchViewController.tabBarItem = UITabBarItem(title: "search".localized, image: UIImage(systemName: "magnifyingglass"), tag: 1)
+        searchNavController.setViewControllers([searchViewController], animated: true)
+        searchNavController.setNavigationBarHidden(true, animated: false)
                 
-        self.setViewControllers([homeVC, searchVC], animated: true)
+        self.setViewControllers([homeNavController, searchNavController], animated: true)
     }
 }
