@@ -15,6 +15,7 @@ class SearchViewModel {
     let searchHistoryCellTappedRelay = PublishRelay<String>()
     let deleteSearchHistoryCellRelay = PublishRelay<String>()
     let suggestedKeywordTappedRelay = PublishRelay<String>()
+    let buttonWithContentTappedRelay = PublishRelay<Content>()
     
     private let disposeBag = DisposeBag()
     

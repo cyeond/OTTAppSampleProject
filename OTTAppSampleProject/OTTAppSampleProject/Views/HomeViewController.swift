@@ -190,18 +190,42 @@ class HomeViewController: UIViewController {
             case .banner(let content):
                 guard let bannerCell = collectionView.dequeueReusableCell(withReuseIdentifier: BannerCell.identifier, for: indexPath) as? BannerCell else { return UICollectionViewCell() }
                 bannerCell.configure(data: content.data)
+                bannerCell.bannerImageButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.buttonWithContentTappedRelay.accept(content)
+                    }
+                    .disposed(by: bannerCell.disposeBag)
                 return bannerCell
             case .listWithImageAndTitle(let content):
                 guard let listWithTitleAndImageCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageAndTitleCell.identifier, for: indexPath) as? ListWithImageAndTitleCell else { return UICollectionViewCell() }
                 listWithTitleAndImageCell.configure(data: content.data)
+                listWithTitleAndImageCell.listImageButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.buttonWithContentTappedRelay.accept(content)
+                    }
+                    .disposed(by: listWithTitleAndImageCell.disposeBag)
                 return listWithTitleAndImageCell
             case .listWithImage(let content):
                 guard let listWithImageCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageCell.identifier, for: indexPath) as? ListWithImageCell else { return UICollectionViewCell()}
                 listWithImageCell.configure(data: content.data)
+                listWithImageCell.previewImageButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.buttonWithContentTappedRelay.accept(content)
+                    }
+                    .disposed(by: listWithImageCell.disposeBag)
                 return listWithImageCell
             case .listWithImageAndNumber(let content):
                 guard let listWithImageAndNumberCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageAndNumberCell.identifier, for: indexPath) as? ListWithImageAndNumberCell else { return UICollectionViewCell() }
                 listWithImageAndNumberCell.configure(data: content.data, number: indexPath.row)
+                listWithImageAndNumberCell.listImageButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.buttonWithContentTappedRelay.accept(content)
+                    }
+                    .disposed(by: listWithImageAndNumberCell.disposeBag)
                 return listWithImageAndNumberCell
             default:
                 return UICollectionViewCell()
@@ -309,6 +333,12 @@ class HomeViewController: UIViewController {
             .asSignal()
             .emit(with: self) { weakSelf, _ in
                 weakSelf.endRefreshingWithError()
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.buttonWithContentTappedRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, content in
             }
             .disposed(by: disposeBag)
         

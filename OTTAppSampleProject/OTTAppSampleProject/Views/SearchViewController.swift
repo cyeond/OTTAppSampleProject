@@ -221,6 +221,12 @@ class SearchViewController: UIViewController {
             case .listWithImageAndNumber(let content):
                 guard let listWithImageAndNumberCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageAndNumberCell.identifier, for: indexPath) as? ListWithImageAndNumberCell else { return UICollectionViewCell()}
                 listWithImageAndNumberCell.configure(data: content.data, number: indexPath.row, numberPosition: .middle)
+                listWithImageAndNumberCell.listImageButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.buttonWithContentTappedRelay.accept(content)
+                    }
+                    .disposed(by: listWithImageAndNumberCell.disposeBag)
                 return listWithImageAndNumberCell
             case .listWithTextAndButton(let text):
                 guard let listWithTextAndButtonCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithTextAndButtonCell.identifier, for: indexPath) as? ListWithTextAndButtonCell else { return UICollectionViewCell()}
@@ -241,6 +247,12 @@ class SearchViewController: UIViewController {
             case .listWithImage(let content):
                 guard let listWithImageCell = collectionView.dequeueReusableCell(withReuseIdentifier: ListWithImageCell.identifier, for: indexPath) as? ListWithImageCell else { return UICollectionViewCell()}
                 listWithImageCell.configure(data: content.data)
+                listWithImageCell.previewImageButton.rx.tap
+                    .asSignal()
+                    .emit(with: self) { weakSelf, _ in
+                        weakSelf.viewModel.buttonWithContentTappedRelay.accept(content)
+                    }
+                    .disposed(by: listWithImageCell.disposeBag)
                 return listWithImageCell
             case .buttonWithText(let text):
                 guard let buttonWithTextCell = collectionView.dequeueReusableCell(withReuseIdentifier: ButtonWithTextCell.identifier, for: indexPath) as? ButtonWithTextCell else { return UICollectionViewCell() }
@@ -369,6 +381,12 @@ class SearchViewController: UIViewController {
             .emit(with: self) { weakSelf, text in
                 weakSelf.searchBar.text = text
                 weakSelf.search()
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.buttonWithContentTappedRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, content in
             }
             .disposed(by: disposeBag)
         

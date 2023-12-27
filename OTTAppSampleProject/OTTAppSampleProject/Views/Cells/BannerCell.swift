@@ -8,13 +8,16 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import RxSwift
 
 class BannerCell: UICollectionViewCell {
     static let identifier: String = "BannerCell"
-    private let bannerImageView = UIImageView()
     private let titleLabel = UILabel()
     private let infoLabel = UILabel()
     private let playButton = UIButton()
+    let bannerImageButton = UIButton()
+    var disposeBag = DisposeBag()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,16 +32,22 @@ class BannerCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        setGradientLayer(bannerImageView)
+        setGradientLayer(bannerImageButton)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        disposeBag = DisposeBag()
     }
     
     private func setUI() {
-        addSubview(bannerImageView)
+        addSubview(bannerImageButton)
         addSubview(playButton)
         addSubview(infoLabel)
         addSubview(titleLabel)
         
-        bannerImageView.snp.makeConstraints {
+        bannerImageButton.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
@@ -60,8 +69,9 @@ class BannerCell: UICollectionViewCell {
             $0.bottom.equalTo(infoLabel.snp.top)
         }
         
-        bannerImageView.clipsToBounds = true
-        bannerImageView.layer.cornerRadius = 10.0
+        bannerImageButton.clipsToBounds = true
+        bannerImageButton.layer.cornerRadius = 10.0
+        bannerImageButton.adjustsImageWhenHighlighted = false
         
         playButton.backgroundColor = .systemBlue
         playButton.clipsToBounds = true
@@ -82,9 +92,11 @@ class BannerCell: UICollectionViewCell {
         let originalLanguage = data.originalLanguage != nil ? " ∙ " + data.originalLanguage! : ""
         let releaseDate = data.releaseDate != nil ? " ∙ " + data.releaseDate! : ""
         
-        self.titleLabel.text = (data.title != nil) ? data.title : data.name
-        self.infoLabel.text = "⭐️ \(rating)\(originalLanguage)\(releaseDate)"
-        self.bannerImageView.kf.setImage(with: URL(string: data.previewImageUrl))
+        titleLabel.text = (data.title != nil) ? data.title : data.name
+        infoLabel.text = "⭐️ \(rating)\(originalLanguage)\(releaseDate)"
+        bannerImageButton.kf.setImage(with: URL(string: data.previewImageUrl), for: .normal, completionHandler:  { [weak self] _ in
+            self?.bannerImageButton.layoutIfNeeded()
+        })
     }
     
     private func setGradientLayer(_ view: UIView) {

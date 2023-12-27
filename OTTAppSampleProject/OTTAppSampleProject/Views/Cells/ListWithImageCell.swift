@@ -8,11 +8,13 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import RxSwift
 
 class ListWithImageCell: UICollectionViewCell {
     static let identifier = "ListWithImageCell"
-    private let previewImageButton = UIButton()
-    private let listImageView = UIImageView()
+    let previewImageButton = UIButton()
+    var disposeBag = DisposeBag()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,6 +26,12 @@ class ListWithImageCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        disposeBag = DisposeBag()
+    }
+    
     private func setUI() {
         addSubview(previewImageButton)
         
@@ -33,9 +41,12 @@ class ListWithImageCell: UICollectionViewCell {
         
         previewImageButton.clipsToBounds = true
         previewImageButton.layer.cornerRadius = 5.0
+        previewImageButton.adjustsImageWhenHighlighted = false
     }
     
     func configure(data: ContentData) {
-        previewImageButton.kf.setImage(with: URL(string: data.previewImageUrl), for: .normal)
+        previewImageButton.kf.setImage(with: URL(string: data.previewImageUrl), for: .normal, completionHandler: { [weak self] _ in
+            self?.previewImageButton.layoutIfNeeded()
+        })
     }
 }

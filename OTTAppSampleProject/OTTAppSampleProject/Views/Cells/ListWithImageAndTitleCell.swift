@@ -8,11 +8,13 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import RxSwift
 
 class ListWithImageAndTitleCell: UICollectionViewCell {
     static let identifier: String = "ListWithImageAndTitleCell"
-    private let listImageView = UIImageView()
     private let titleLabel = UILabel()
+    let listImageButton = UIButton()
+    var disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,9 +26,15 @@ class ListWithImageAndTitleCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        disposeBag = DisposeBag()
+    }
+    
     private func setUI() {
         backgroundColor = .black
-        addSubview(listImageView)
+        addSubview(listImageButton)
         addSubview(titleLabel)
         
         titleLabel.snp.makeConstraints {
@@ -35,7 +43,7 @@ class ListWithImageAndTitleCell: UICollectionViewCell {
             $0.height.equalToSuperview().multipliedBy(0.2)
         }
         
-        listImageView.snp.makeConstraints {
+        listImageButton.snp.makeConstraints {
             $0.horizontalEdges.top.equalToSuperview()
             $0.bottom.equalTo(titleLabel.snp.top).offset(-5.0)
         }
@@ -45,12 +53,15 @@ class ListWithImageAndTitleCell: UICollectionViewCell {
         titleLabel.font = .boldSystemFont(ofSize: 14.0)
         titleLabel.adjustsFontSizeToFitWidth = true
         
-        listImageView.clipsToBounds = true
-        listImageView.layer.cornerRadius = 5.0
+        listImageButton.clipsToBounds = true
+        listImageButton.layer.cornerRadius = 5.0
+        listImageButton.adjustsImageWhenHighlighted = false
     }
     
     func configure(data: ContentData) {
         titleLabel.text = (data.title != nil) ? data.title : data.name
-        listImageView.kf.setImage(with: URL(string: data.previewImageUrl))
+        listImageButton.kf.setImage(with: URL(string: data.previewImageUrl), for: .normal, completionHandler:  { [weak self] _ in
+            self?.listImageButton.layoutIfNeeded()
+        })
     }
 }

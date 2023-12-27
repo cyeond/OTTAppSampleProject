@@ -14,6 +14,7 @@ class HomeViewModel {
     var movieResultsRelay = PublishRelay<[APIResult]>()
     var apiErrorRelay = PublishRelay<Void>()
     var currentContentType: ContentType = .tv
+    let buttonWithContentTappedRelay = PublishRelay<Content>()
     
     private let disposeBag = DisposeBag()
     
