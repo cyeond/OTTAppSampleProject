@@ -13,7 +13,7 @@ enum ContentType: String {
 struct ContentData: Codable, Hashable {
     let id: Int
     let voteCount: Int?
-    let originalTitle, title, originalName, name, originalLanguage, releaseDate, posterPath: String?
+    let originalTitle, title, originalName, name, originalLanguage, releaseDate, posterPath, mediaType: String?
     let popularity, voteAverage: Double?
     var previewImageUrl: String {
         guard let posterPath = posterPath else { return Constants.PLACEHOLDER_IMAGE_URL }
@@ -28,6 +28,7 @@ struct ContentData: Codable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case id, popularity, title, name
+        case mediaType = "media_type"
         case originalLanguage = "original_language"
         case originalTitle = "original_title"
         case originalName = "original_name"

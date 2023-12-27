@@ -320,7 +320,10 @@ class SearchViewController: UIViewController {
             .emit(with: self) { weakSelf, data in
                 guard var suggestionDataSnapshot = weakSelf.suggestionDataSnapshot else { return }
                 
-                let suggestionItems = data.results.prefix(15).map { Item.listWithImageAndNumber(Content(type: .none, data: $0)) }
+                let suggestionItems = data.results.prefix(15).map {
+                    let type: ContentType? = ContentType(rawValue: $0.mediaType ?? "")
+                    return Item.listWithImageAndNumber(Content(type: type, data: $0))
+                }
                 let keywordItems = Constants.SUGGESTED_KEYWORDS.map { Item.buttonWithText($0) }
                 
                 suggestionDataSnapshot.appendItems(suggestionItems, toSection: Section(id: "RisingContents"))
@@ -408,7 +411,10 @@ class SearchViewController: UIViewController {
     
     private func showSearchResultLayout(contents: [ContentData]) {
         if var snapshot = searchResultDataSnapshot {
-            let searchResultItems = contents.map { Item.listWithImage(Content(type: .none, data: $0)) }
+            let searchResultItems = contents.map {
+                let type: ContentType? = ContentType(rawValue: $0.mediaType ?? "")
+                return Item.listWithImage(Content(type: type, data: $0))
+            }
             
             snapshot.appendItems(searchResultItems, toSection: Section(id: "SearchResult"))
 
