@@ -34,3 +34,5 @@
 "drama" = "drama";
 "animantion" = "animantion";
 "thriller" = "thriller";
+"hours_shorten" = "h";
+"minutes_shorten" = "m";

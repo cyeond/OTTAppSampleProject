@@ -11,6 +11,7 @@ import RxRelay
 class SearchViewModel {
     var suggestionResultRelay = PublishRelay<APIResult>()
     var searchResultRelay = PublishRelay<APIResult>()
+    var detailResultRelay = PublishRelay<ContentData>()
     var apiErrorRelay = PublishRelay<Void>()
     let searchHistoryCellTappedRelay = PublishRelay<String>()
     let deleteSearchHistoryCellRelay = PublishRelay<String>()
@@ -38,6 +39,21 @@ class SearchViewModel {
         API.getData(type: .keywordSearching(encodedText))
             .subscribe(with: self, onNext: { weakSelf, result in
                 weakSelf.searchResultRelay.accept(result)
+            }, onError: { weakSelf, error in
+                weakSelf.apiErrorRelay.accept(())
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func getDetailData(content: Content) {
+        guard let contentType = content.type else {
+            apiErrorRelay.accept(())
+            return
+        }
+        
+        API.getDetails(type: .details(contentType, String(content.data.id)))
+            .subscribe(with: self, onNext: { weakSelf, result in
+                weakSelf.detailResultRelay.accept(result)
             }, onError: { weakSelf, error in
                 weakSelf.apiErrorRelay.accept(())
             })

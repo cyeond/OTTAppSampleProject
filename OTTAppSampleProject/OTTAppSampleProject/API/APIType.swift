@@ -10,6 +10,7 @@ enum APIType {
     case topRated(ContentType)
     case popular(ContentType)
     case weeklyTrending(ContentType?)
+    case details(ContentType, String)
     case upcomingMovies
     case nowPlayingMovies
     case onTheAirTV
@@ -25,6 +26,8 @@ enum APIType {
             return Constants.API_ENDPOINT + "/" + type.rawValue + "/top_rated" + "?api_key=" + Constants.API_KEY + "&language=ko"
         case .weeklyTrending(let type):
             return Constants.API_ENDPOINT + "/trending/" + (type?.rawValue ?? "all") + "/week" + "?api_key=" + Constants.API_KEY + "&language=ko"
+        case .details(let type, let id):
+            return Constants.API_ENDPOINT + "/" + type.rawValue + "/" + id + "?api_key=" + Constants.API_KEY + "&language=ko"
         case .upcomingMovies:
             return Constants.API_ENDPOINT + "/movie/upcoming" + "?api_key=" + Constants.API_KEY + "&language=ko"
         case .nowPlayingMovies:

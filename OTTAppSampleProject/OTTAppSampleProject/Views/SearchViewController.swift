@@ -385,8 +385,15 @@ class SearchViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.buttonWithContentTappedRelay
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+            .bind(with: self) { weakSelf, content in
+                weakSelf.viewModel.getDetailData(content: content)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.detailResultRelay
             .asSignal()
-            .emit(with: self) { weakSelf, content in
+            .emit(with: self) { weakSelf, result in
             }
             .disposed(by: disposeBag)
         
