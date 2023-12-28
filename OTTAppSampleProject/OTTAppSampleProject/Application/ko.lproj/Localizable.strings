@@ -36,3 +36,7 @@
 "thriller" = "스릴러";
 "hours_shorten" = "시간";
 "minutes_shorten" = "분";
+"original_title" = "원제";
+"release_date" = "출시";
+"media_type" = "유형";
+"unknown" = "알 수 없음";

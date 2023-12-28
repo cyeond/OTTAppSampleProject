@@ -36,3 +36,7 @@
 "thriller" = "thriller";
 "hours_shorten" = "h";
 "minutes_shorten" = "m";
+"original_title" = "original title";
+"release_date" = "release date";
+"media_type" = "media type";
+"unknown" = "unknown";
