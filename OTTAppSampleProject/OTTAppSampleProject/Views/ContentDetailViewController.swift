@@ -16,9 +16,11 @@ class ContentDetailViewController: UIViewController {
     private let titleLabel = UILabel()
     private let ratingLabel = UILabel()
     private let languageAndReleaseYearLabel = UILabel()
+    private let overviewLabel = UILabel()
     private let titleLabelHeight: CGFloat = 50.0
     private let ratingLabelHeight: CGFloat = 30.0
     private let languageAndReleaseYearLabelHeight: CGFloat = 30.0
+    private let overviewLabelHeight: CGFloat = 90.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +36,7 @@ class ContentDetailViewController: UIViewController {
         scrollContentView.addSubview(titleLabel)
         scrollContentView.addSubview(ratingLabel)
         scrollContentView.addSubview(languageAndReleaseYearLabel)
+        scrollContentView.addSubview(overviewLabel)
         
         previewImageView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
@@ -49,7 +52,7 @@ class ContentDetailViewController: UIViewController {
         scrollContentView.snp.makeConstraints {
             $0.edges.equalTo(0)
             $0.width.equalTo(scrollView.snp.width)
-            $0.height.equalTo(titleLabelHeight + ratingLabelHeight + languageAndReleaseYearLabelHeight + 20.0)
+            $0.height.equalTo(titleLabelHeight + ratingLabelHeight + languageAndReleaseYearLabelHeight + overviewLabelHeight + 20.0)
         }
         
         titleLabel.snp.makeConstraints {
@@ -70,6 +73,11 @@ class ContentDetailViewController: UIViewController {
             $0.height.equalTo(languageAndReleaseYearLabelHeight)
         }
         
+        overviewLabel.snp.makeConstraints {
+            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
+            $0.top.equalTo(languageAndReleaseYearLabel.snp.bottom)
+            $0.height.equalTo(overviewLabelHeight)
+        }
         
         previewImageView.backgroundColor = .black
         scrollView.backgroundColor = .black
@@ -89,6 +97,11 @@ class ContentDetailViewController: UIViewController {
         languageAndReleaseYearLabel.textAlignment = .left
         languageAndReleaseYearLabel.font = .boldSystemFont(ofSize: 15.0)
         languageAndReleaseYearLabel.numberOfLines = 1
+        
+        overviewLabel.textColor = .white
+        overviewLabel.textAlignment = .left
+        overviewLabel.font = .systemFont(ofSize: 14.0)
+        overviewLabel.numberOfLines = 3
     }
     
     func configure(content: Content) {
@@ -99,6 +112,7 @@ class ContentDetailViewController: UIViewController {
         titleLabel.text = (content.data.title != nil) ? content.data.title : content.data.name
         ratingLabel.text = "⭐️ \(rating) (\(content.data.ratingCount))"
         languageAndReleaseYearLabel.text = "\(originalLanguage)\(releaseYear)"
+        overviewLabel.text = content.data.overview
         previewImageView.kf.setImage(with: URL(string: content.data.previewImageUrl), completionHandler:  { [weak self] _ in
             self?.previewImageView.layoutIfNeeded()
         })
