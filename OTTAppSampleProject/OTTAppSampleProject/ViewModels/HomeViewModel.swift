@@ -12,7 +12,7 @@ import RxRelay
 class HomeViewModel {
     var tvResultsRelay = PublishRelay<[APIResult]>()
     var movieResultsRelay = PublishRelay<[APIResult]>()
-    var detailResultRelay = PublishRelay<ContentData>()
+    var detailResultRelay = PublishRelay<Content>()
     var apiErrorRelay = PublishRelay<Void>()
     var currentContentType: ContentType = .tv
     let buttonWithContentTappedRelay = PublishRelay<Content>()
@@ -58,7 +58,7 @@ class HomeViewModel {
         
         API.getDetails(type: .details(contentType, String(content.data.id)))
             .subscribe(with: self, onNext: { weakSelf, result in
-                weakSelf.detailResultRelay.accept(result)
+                weakSelf.detailResultRelay.accept(Content(type: contentType, data: result))
             }, onError: { weakSelf, error in
                 weakSelf.apiErrorRelay.accept(())
             })

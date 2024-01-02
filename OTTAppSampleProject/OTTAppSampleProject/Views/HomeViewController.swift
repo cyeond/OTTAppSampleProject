@@ -345,9 +345,7 @@ class HomeViewController: UIViewController {
         
         viewModel.detailResultRelay
             .asSignal()
-            .emit(with: self) { weakSelf, result in
-                let type: ContentType? = ContentType(rawValue: result.mediaType ?? "")
-                let content = Content(type: type, data: result)
+            .emit(with: self) { weakSelf, content in
                 let contentDetailViewController = ContentDetailViewController()
                 contentDetailViewController.configure(content: content)
                 weakSelf.navigationController?.pushViewController(contentDetailViewController, animated: true)
