@@ -43,29 +43,27 @@ extension UILabel {
     }
     
     var maxHeight: CGFloat {
-        let alphaHeight: CGFloat = 30.0
-        return self.font.lineHeight * CGFloat(maxNumberOfLines) + alphaHeight
+        return self.font.lineHeight * CGFloat(maxNumberOfLines)
     }
         
     func replaceEllipsis(with string: String, eventRelay: PublishRelay<Void>) {
         guard let text = self.text else { return }
+        guard maxNumberOfLines > self.numberOfLines || self.numberOfLines == 0 else { return }
         
         lineBreakMode = .byClipping
         sizeToFit()
         
-        if maxNumberOfLines <= self.numberOfLines {
-            return
-        }
-        
         var newText = text
         
-        while countNumberOfLines(text: newText + string) > self.numberOfLines {
+        while countNumberOfLines(text: newText + string) > self.numberOfLines, self.numberOfLines != 0 {
             newText.removeLast()
         }
         
         if newText.count < text.count {
             newText.removeLast("... ".count + string.count)
             newText += "... " + string
+        } else if self.numberOfLines == 0 {
+            newText += string
         } else {
             newText.removeLast(string.count)
             newText += string
