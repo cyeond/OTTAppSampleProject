@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import RxSwift
+import RxRelay
 
 class ContentDetailViewController: UIViewController {
     private let previewImageView = UIImageView()
@@ -27,11 +29,17 @@ class ContentDetailViewController: UIViewController {
     private let originalTitleLabelHeight: CGFloat = 30.0
     private let releaseDateLabelHeight: CGFloat = 30.0
     private let mediaTypeLabelHeight: CGFloat = 30.0
+    private var originalText: String? = nil
+    private var overviewLabelHeightConstraint: Constraint?
+    private let foldOverviewRelay = PublishRelay<Void>()
+    private let unfoldOverviewRelay = PublishRelay<Void>()
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUI()
+        bind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,16 +56,11 @@ class ContentDetailViewController: UIViewController {
     
     private func setUI() {
         view.backgroundColor = .black
-        view.addSubview(previewImageView)
         view.addSubview(scrollView)
+        view.addSubview(previewImageView)
         scrollView.addSubview(scrollContentView)
-        scrollContentView.addSubview(titleLabel)
-        scrollContentView.addSubview(ratingLabel)
-        scrollContentView.addSubview(languageAndReleaseYearLabel)
-        scrollContentView.addSubview(overviewLabel)
-        scrollContentView.addSubview(originalTitleLabel)
-        scrollContentView.addSubview(releaseDateLabel)
-        scrollContentView.addSubview(mediaTypeLabel)
+        [titleLabel, ratingLabel, languageAndReleaseYearLabel, overviewLabel, originalTitleLabel, releaseDateLabel, mediaTypeLabel].forEach { self.scrollContentView.addSubview($0)
+        }
         
         previewImageView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
@@ -71,51 +74,50 @@ class ContentDetailViewController: UIViewController {
         }
         
         scrollContentView.snp.makeConstraints {
-            $0.edges.equalTo(0)
-            $0.width.equalTo(scrollView.snp.width)
-            $0.height.equalTo(titleLabelHeight + ratingLabelHeight + languageAndReleaseYearLabelHeight + overviewLabelHeight + originalTitleLabelHeight + releaseDateLabelHeight + mediaTypeLabelHeight + 65.0)
+            $0.edges.equalTo(scrollView)
+            $0.width.equalTo(scrollView)
         }
         
         titleLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
-            $0.top.equalTo(scrollContentView.snp.top).inset(20.0)
+            $0.top.width.equalTo(scrollContentView)
             $0.height.equalTo(titleLabelHeight)
         }
         
         ratingLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
+            $0.width.equalTo(scrollContentView)
             $0.top.equalTo(titleLabel.snp.bottom)
             $0.height.equalTo(ratingLabelHeight)
         }
         
         languageAndReleaseYearLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
+            $0.width.equalTo(scrollContentView)
             $0.top.equalTo(ratingLabel.snp.bottom)
             $0.height.equalTo(languageAndReleaseYearLabelHeight)
         }
         
         overviewLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
+            $0.width.equalTo(scrollContentView)
             $0.top.equalTo(languageAndReleaseYearLabel.snp.bottom)
-            $0.height.equalTo(overviewLabelHeight)
+            overviewLabelHeightConstraint = $0.height.equalTo(overviewLabelHeight).constraint
         }
         
         originalTitleLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
+            $0.width.equalTo(scrollContentView)
             $0.top.equalTo(overviewLabel.snp.bottom)
             $0.height.equalTo(originalTitleLabelHeight)
         }
         
         releaseDateLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
+            $0.width.equalTo(scrollContentView)
             $0.top.equalTo(originalTitleLabel.snp.bottom)
             $0.height.equalTo(releaseDateLabelHeight)
         }
         
         mediaTypeLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(scrollContentView.snp.horizontalEdges)
+            $0.width.equalTo(scrollContentView)
             $0.top.equalTo(releaseDateLabel.snp.bottom)
             $0.height.equalTo(mediaTypeLabelHeight)
+            $0.bottom.equalTo(scrollView)
         }
         
         previewImageView.backgroundColor = .black
@@ -173,6 +175,31 @@ class ContentDetailViewController: UIViewController {
         previewImageView.kf.setImage(with: URL(string: content.data.previewImageUrl), completionHandler:  { [weak self] _ in
             self?.previewImageView.layoutIfNeeded()
         })
-
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.originalText = self.overviewLabel.text
+            self.overviewLabel.replaceEllipsis(with: "더보기", eventRelay: self.unfoldOverviewRelay)
+        }
+    }
+    
+    private func bind() {
+        unfoldOverviewRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, _ in
+                weakSelf.overviewLabel.text = weakSelf.originalText
+                weakSelf.overviewLabel.numberOfLines = weakSelf.overviewLabel.maxNumberOfLines
+                weakSelf.overviewLabelHeightConstraint?.deactivate()
+                weakSelf.overviewLabel.snp.makeConstraints {
+                    weakSelf.overviewLabelHeightConstraint = $0.height.equalTo(weakSelf.overviewLabel.maxHeight).constraint
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        foldOverviewRelay
+            .asSignal()
+            .emit(with: self) { weakSelf, _ in
+            }
+            .disposed(by: disposeBag)
     }
 }
